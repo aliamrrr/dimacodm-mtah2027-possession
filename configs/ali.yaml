@@ -1,0 +1,18 @@
+# Configuration of `ali`, the logistic solution: two logistic models and a 4-state Viterbi decoder.
+# It is kept as the simple reference and as the provider of the players' speed trend used by
+# `ali_deep`; it is not the submitted solution. Parameters chosen on the benchmark of OTHER games
+# (python -m mtah.solutions.ali.train --search), never on BAR-ATH. The two logistic models are in
+# src/mtah/solutions/ali/weights.json, fitted on those same other games.
+solution: ali
+seed: 0
+params:
+  ball_gap_frames: 25
+  team_scale: 0.6
+  dead_scale: 0.25
+  dead_bias: -1.5
+  switch_cost: 7.0
+  stop_cost: 20.0
+  restart_cost: 12.0
+  same_team_restart_cost: 1.0
+  stop_trend_bonus: 5.0
+  start_trend_bonus: 10.0

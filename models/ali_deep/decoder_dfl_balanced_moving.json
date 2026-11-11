@@ -1,0 +1,41 @@
+{
+  "convention": "dfl",
+  "objective": "balanced",
+  "min_spell_s": 0.0,
+  "spell_f1": 0.7515,
+  "by_source": {
+    "metrica": 0.7803,
+    "dfl": 0.7227
+  },
+  "params": {
+    "ball_gap_frames": 25,
+    "team_scale": 0.3,
+    "dead_scale": 0.35,
+    "dead_bias": -2.5,
+    "switch_cost": 5.0,
+    "stop_cost": 5.0,
+    "restart_cost": 30.0,
+    "same_team_restart_cost": 1.0,
+    "stop_trend_bonus": 0.0,
+    "start_trend_bonus": 10.0,
+    "blend": 1.0,
+    "conventions": [
+      1
+    ],
+    "boundary_gain": 4.0,
+    "min_spell_s": 0.0
+  },
+  "per_game": {
+    "dfl_J03WMX": 0.6587,
+    "dfl_J03WN1": 0.6903,
+    "dfl_J03WOH": 0.7665,
+    "dfl_J03WOY": 0.7538,
+    "dfl_J03WPY": 0.7375,
+    "dfl_J03WQQ": 0.7021,
+    "dfl_J03WR9": 0.7498,
+    "metrica_1": 0.7989,
+    "metrica_2": 0.7613,
+    "metrica_3": 0.7808
+  },
+  "profile": "real-like-moving"
+}

@@ -1,0 +1,6 @@
+# The official baseline, re-implemented. window=50 rebuilds baseline_smooth50.csv (the published
+# floor: spellF1 0.2433 on the full match).
+solution: dummy
+seed: 0
+params:
+  window: 50

@@ -1,0 +1,69 @@
+# This repository is public. The match data is not, and never will be: everything below is either
+# licensed data, something derived from it that could rebuild it, or a generated output.
+
+# -- gated data and anything derived from it ---------------------------------------------------
+data/*
+!data/README.md
+data_synthetic/
+.cache/
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.npz
+*.npy
+*.parquet
+*.feather
+*.pkl
+*.pickle
+*.h5
+*.hdf5
+*_atd.txt
+*_atd.xml
+*_homography.csv
+*_smart_tagging.xml
+
+# -- private ground truth (we do not have it; belt and braces) ---------------------------------
+*_possession_gt.csv
+*_possession_gt_meta.json
+*_possession_gt_reference.csv
+
+# -- submissions and outputs: generated, never committed ---------------------------------------
+submissions/*
+!submissions/README.md
+final/*
+!final/README.md
+!final/SUBMISSION.json
+outputs/
+vendor/official/evaluation/reports/
+vendor/official/evaluation/results/
+vendor/official/evaluation/scoreboard.csv
+
+# -- models: only the published weights of ali_deep, trained on other games ---------------------
+models/*
+!models/README.md
+!models/ali_deep/
+models/ali_deep/*
+!models/ali_deep/fold*.npz
+!models/ali_deep/fold*.json
+!models/ali_deep/decoder_*.json
+
+# -- secrets -----------------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+
+# -- tools -------------------------------------------------------------------------------------
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+junit.xml
+htmlcov/
+.idea/
+.vscode/
+.DS_Store

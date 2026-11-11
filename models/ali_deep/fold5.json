@@ -1,0 +1,75 @@
+{
+  "fold": 5,
+  "held_out": [],
+  "config": {
+    "d_token": 64,
+    "heads": 4,
+    "set_layers": 2,
+    "d_frame": 128,
+    "dilations": [
+      1,
+      2,
+      4,
+      8,
+      16,
+      32,
+      64,
+      128,
+      256
+    ],
+    "n_conventions": 3,
+    "dropout": 0.1,
+    "boundary_head": true
+  },
+  "steps": 20000,
+  "batch": 16,
+  "centre": 768,
+  "lr": 0.0005,
+  "init": null,
+  "extra": true,
+  "spell_alpha": 0.5,
+  "clean": false,
+  "profile": "real-like-moving",
+  "history": [
+    {
+      "step": 2000,
+      "scores": {}
+    },
+    {
+      "step": 4000,
+      "scores": {}
+    },
+    {
+      "step": 6000,
+      "scores": {}
+    },
+    {
+      "step": 8000,
+      "scores": {}
+    },
+    {
+      "step": 10000,
+      "scores": {}
+    },
+    {
+      "step": 12000,
+      "scores": {}
+    },
+    {
+      "step": 14000,
+      "scores": {}
+    },
+    {
+      "step": 16000,
+      "scores": {}
+    },
+    {
+      "step": 18000,
+      "scores": {}
+    },
+    {
+      "step": 20000,
+      "scores": {}
+    }
+  ]
+}

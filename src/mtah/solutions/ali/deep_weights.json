@@ -1,0 +1,28 @@
+{
+  "files": {
+    "fold0.npz": {
+      "sha256": "6c9f6ad8a7f2f7c7f7d11e161b2ce19ec37a40f3a1b1ba8e9482dc2343e7ca91",
+      "bytes": 3003688
+    },
+    "fold1.npz": {
+      "sha256": "10c41590262c0880b4b166955daefb94507ed1793511bfadd27b5abe68c9e964",
+      "bytes": 3003688
+    },
+    "fold2.npz": {
+      "sha256": "5d18584e9c5fdab9ede8ea6b177e8feb68722bddb9ae1ea116faf1c1f93b3d90",
+      "bytes": 3003688
+    },
+    "fold3.npz": {
+      "sha256": "e348140e3ac6496ba4dd7ed60c58172dd4b55b253042d2d37df231ad7a6bfee3",
+      "bytes": 3003688
+    },
+    "fold4.npz": {
+      "sha256": "d4a81b28e1a9089da89d95d4ed3df9ff0d3a3b60db014bf20faf3eb1ff810a96",
+      "bytes": 3003688
+    },
+    "fold5.npz": {
+      "sha256": "deb9e6a99545efcb02ff9c04272a402924812fcf138950610580c07da4ffa9f0",
+      "bytes": 3003688
+    }
+  }
+}

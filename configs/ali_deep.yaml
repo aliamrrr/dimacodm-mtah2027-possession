@@ -1,0 +1,29 @@
+# Configuration of `ali_deep`, the submitted solution.
+# Deep model (set transformer + temporal convolution, +/- 20 s of context) trained on a GPU on
+# OTHER games only (3 Metrica sample games + 7 DFL / IDSSE games + 20 SkillCorner games used for
+# training only): 5 folds by game + 1 fold on all ten, 20 000 steps, spell-balanced loss, boundary
+# head, tracking degraded the way an automatic tracking really looks. Weights under
+# models/ali_deep/, pinned by sha256 in src/mtah/solutions/ali/deep_weights.json.
+# Decoder chosen out-of-fold on those other games, never on BAR-ATH:
+#   python -m mtah.solutions.ali.deep_tune --convention dfl --objective balanced \
+#       --profile real-like-moving
+# Out-of-fold spellF1 0.7515 (Metrica 0.7803, DFL 0.7227), labels as published.
+solution: ali_deep
+seed: 0
+params:
+  ball_gap_frames: 25
+  team_scale: 0.3
+  dead_scale: 0.35
+  dead_bias: -2.5
+  switch_cost: 5.0
+  stop_cost: 5.0
+  restart_cost: 30.0
+  same_team_restart_cost: 1.0
+  stop_trend_bonus: 0.0
+  start_trend_bonus: 10.0
+  blend: 1.0
+  boundary_gain: 4.0
+  # controlled-possession rule, off: the public reference keeps brief possessions
+  min_spell_s: 0.0
+  conventions: [1]
+  models: models/ali_deep

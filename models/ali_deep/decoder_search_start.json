@@ -1,0 +1,20 @@
+{
+  "note": "Starting point of the decoder search (deep_tune --start): the decoder of an earlier model of ours, itself searched out-of-fold on the other games.",
+  "params": {
+    "ball_gap_frames": 25,
+    "team_scale": 0.2,
+    "dead_scale": 1.0,
+    "dead_bias": -2.0,
+    "switch_cost": 4.0,
+    "stop_cost": 30.0,
+    "restart_cost": 60.0,
+    "same_team_restart_cost": 1.0,
+    "stop_trend_bonus": 5.0,
+    "start_trend_bonus": 10.0,
+    "blend": 0.75,
+    "conventions": [
+      1
+    ],
+    "boundary_gain": 4.0
+  }
+}

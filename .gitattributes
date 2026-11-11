@@ -1,0 +1,12 @@
+# LF everywhere: the sha256 of a submission must not depend on the operating system of whoever
+# commits or clones.
+* text=auto eol=lf
+*.csv text eol=lf
+*.py text eol=lf
+*.sh text eol=lf
+*.png binary
+*.jpg binary
+*.npz binary
+*.pdf binary
+# Exact copy of the official repository: never normalised.
+vendor/official/** -text
