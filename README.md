@@ -121,8 +121,9 @@ docs/                        technical document, training notes, figures
 ## Rules
 
 - The labels come out of the code in this repository. Nothing was annotated or corrected by hand.
-- No model was trained or tuned on the provided match. Training data, model selection and decoder
-  parameters all come from public data about other games (docs/TECHNICAL_DOCUMENT.md, section 3).
+- Nothing was trained, fitted or calibrated on the ground truth or on the video of the provided
+  match. Training data, model selection and decoder parameters all come from public data about
+  other games (docs/TECHNICAL_DOCUMENT.md, section 3).
 - The public 5 minutes were used to check the pipeline, as EVALUATION.md describes, and to check
   our reading of the possession definition, as CHALLENGE.md asks. No parameter was fitted on them.
 - No data of the match is in this repository.

@@ -13,7 +13,8 @@ Repository: https://github.com/aliamrrr/dimacodm-mtah2027-possession
 - **Model.** A neural network reads the players and the ball in each frame, with 20 seconds of
   context before and after. A small decoder then turns its per-frame scores into clean
   possessions.
-- **Training data.** Public data about 30 other games. Nothing from the provided match.
+- **Training data.** Public data about 30 other games. Nothing was trained, fitted or calibrated
+  on the ground truth or on the video of the provided match.
 - **Result on other games.** spellF1 of 0.752 on ten games the models never saw.
 - **Reproduction.** One command, no GPU, about 15 minutes per run, the same file on any machine.
 
@@ -137,7 +138,9 @@ The code is in `deep_data.py`.
 in coarse bins only: how smooth positions are, how long the ball stays visible or missing, how
 long a slot follows a player, how many objects are tracked, whether a visible ball is ever still.
 RULES.md allows inspecting the data to design features. No label, frame or value of the match is
-used, and no model is fitted on it. The degradation ranges cover what this description shows:
+used, and no model is fitted on it. The description uses the automatic tracking only, which is the
+input of the algorithm: no ground truth and no video. The models are then trained, and the decoder
+is tuned, on the other games alone. The degradation ranges cover what this description shows:
 
 | | automatic tracking of the match | degradation used in training |
 |---|---|---|
@@ -168,7 +171,9 @@ of the dead-ball frames. Trained with moving dead balls, it finds 98 %.
 
 **Brief possessions.** CHALLENGE.md says that the public ground truth wins over any reading of the
 definition, and it contains short possessions. We therefore apply no minimum duration
-(`min_spell_s: 0`).
+(`min_spell_s: 0`). This is a reading of the definition, not a fitted value: the organisers allow
+inspecting the data to understand what counts as possession, and zero means that no duration rule
+is applied at all.
 
 ## 5. Results and checks
 
@@ -189,7 +194,9 @@ floor of the organisers' baseline is 0.243 on the provided match.
 
 ### On the provided match
 
-Automatic checks only. No model was trained and no parameter was searched on the provided match.
+Automatic checks only. Nothing was trained, fitted or calibrated on the ground-truth possession
+data or on the video of the provided match. The model weights come from the other games, and the
+decoder parameters were searched on them.
 
 - `mtah data check-loader`: our loader rebuilds the four official baselines byte for byte.
 - The frames graded before the second-half kick-off, which FAQ.md says are all dead ball, are all
