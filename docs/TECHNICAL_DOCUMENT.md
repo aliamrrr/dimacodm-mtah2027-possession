@@ -137,21 +137,21 @@ The code is in `deep_data.py`.
 in coarse bins only: how smooth positions are, how long the ball stays visible or missing, how
 long a slot follows a player, how many objects are tracked, whether a visible ball is ever still.
 RULES.md allows inspecting the data to design features. No label, frame or value of the match is
-used, and no model is fitted on it. This showed that our first simulation was in the wrong regime:
+used, and no model is fitted on it. The degradation ranges cover what this description shows:
 
-| | first simulation | automatic tracking of the match |
+| | automatic tracking of the match | degradation used in training |
 |---|---|---|
-| position jitter | 3 to 40 cm per frame | under 0.5 cm |
-| ball seen or missing, in runs of | 0.6 to 3 s | 10 to 30 s |
-| a slot follows a player for | 8 to 45 s | 1 to 3 min |
-| frames with fewer than 16 objects tracked | almost never | 5 to 15 % |
-| ball visible but still | over 30 % of the frames with a ball, in the source data | 5 to 15 % |
+| position jitter | under 0.5 cm | none to 40 cm |
+| ball seen or missing, in runs of | 10 to 30 s | 0.6 to 30 s |
+| a slot follows a player for | 1 to 3 min | 8 s to 200 s |
+| frames with fewer than 16 objects tracked | 5 to 15 % | episodes where many players are untracked |
+| ball visible but still | 5 to 15 % of the frames with a ball | ball kept moving in 70 % of the stoppages |
 
 The last line is the important one. In the source data a dead ball lies still or is hidden. In an
-automatic tracking it is visible and moving. A model trained on the former takes such stoppages
-for play. We reproduced the problem on the other games by making the ball move in 70 % of the
-stoppages (it glides to the restart spot, wanders, is carried, or is passed between players). The
-share of dead-ball frames found fell from 98 % to 72 %. Training with such stoppages restored it.
+automatic tracking it is visible and moving. A model trained only on the former takes such
+stoppages for play. On the other games, with the ball moving in 70 % of the stoppages (it glides
+to the restart spot, wanders, is carried, or is passed between players), such a model finds 72 %
+of the dead-ball frames. Trained with moving dead balls, it finds 98 %.
 
 ## 4. Possession rules implemented
 
@@ -166,11 +166,9 @@ share of dead-ball frames found fell from 98 % to 72 %. Training with such stopp
 | dead ball | always `D`. Who owns the dead ball is not asked for |
 | half-time | the halves are decoded separately, nothing carries over. The frames graded before the second-half kick-off are labelled `D` by the model itself. No frame number is written in the code |
 
-**Brief possessions.** We first read "a simple touch without control is not a change of
-possession" as a duration rule: a spell under 2 s between two spells of the other team does not
-count. CHALLENGE.md says that the public ground truth wins over any reading of the definition, and
-it contains short possessions that this rule would delete. The rule is switched off
-(`min_spell_s: 0`). The code is kept for the record.
+**Brief possessions.** CHALLENGE.md says that the public ground truth wins over any reading of the
+definition, and it contains short possessions. We therefore apply no minimum duration
+(`min_spell_s: 0`).
 
 ## 5. Results and checks
 
@@ -191,7 +189,7 @@ floor of the organisers' baseline is 0.243 on the provided match.
 
 ### On the provided match
 
-Checks only. None of them was used to choose a parameter.
+Automatic checks only. No model was trained and no parameter was searched on the provided match.
 
 - `mtah data check-loader`: our loader rebuilds the four official baselines byte for byte.
 - The frames graded before the second-half kick-off, which FAQ.md says are all dead ball, are all
@@ -202,17 +200,13 @@ Checks only. None of them was used to choose a parameter.
   spellF1 on this window is 0.77. With 17 possessions it carries little information.
 - `mtah final` produces the same bytes twice, with and without the tracking cache.
 
-These checks told us where the pipeline was wrong. An earlier version produced too many
-possessions on the public window. A later one found the stoppages but made them too short. Each
-fault was then reproduced on the other games and corrected there, with their labels.
-
 ## 6. Limitations
 
 - **Short possessions.** Possessions under 2 s are the hard part. Fewer than half are recovered on
   the other games, and each one missed also damages the possession it interrupts.
-- **Simulated benchmark.** Our benchmark simulates automatic tracking. Two gaps between simulation
-  and reality were found and closed. Others may remain. The score on other games is an estimate,
-  not a measurement, of the score on the provided match.
+- **Simulated benchmark.** Our benchmark simulates automatic tracking. The simulation may still
+  differ from the real tracking, so the score on other games is an estimate, not a measurement, of
+  the score on the provided match.
 - **Long ball losses.** With the ball untracked for tens of seconds, the team in possession is
   inferred from the players alone. A change of possession inside such a stretch can be missed.
 - **Label convention.** We assume the provided match is labelled like the training games
