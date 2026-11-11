@@ -7,7 +7,7 @@ was ever sent to the training machines.
 Training is not needed to regenerate the submission: the published weights are in the repository
 and the prediction from them is byte-reproducible. This page documents how they were made.
 
-![Where the training data comes from and what the provided match is used for](figures/training.svg)
+![Where the training data comes from and how the models are trained](figures/training.svg)
 
 ## Data
 

@@ -97,11 +97,11 @@ before and after. Per-frame distances to the ball do not capture that.
 None of it comes from the provided match. We labelled nothing by hand. All labels come from the
 publishers of the data.
 
-![Where the training data comes from and what the provided match is used for](figures/training.svg)
+![Where the training data comes from and how the models are trained](figures/training.svg)
 
 *Figure 3. Training. (a) The three public sources. (b) Their clean tracking is degraded at random
 for every training window. (c) Six models are trained; each benchmark game is scored by a model
-that never saw it. The provided match is used for prediction only.*
+that never saw it. The published weights and decoder settings then predict the provided match.*
 
 | source | games | tracking | labels, and who made them |
 |---|---|---|---|

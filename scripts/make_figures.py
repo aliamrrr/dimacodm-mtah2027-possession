@@ -353,8 +353,8 @@ def training() -> None:
     global scale
     scale = 1.35
     rng = random.Random(11)
-    w, h = 1030, 380
-    p = head(w, h, "Where the training data comes from and what the provided match is used for")
+    w, h = 1030, 286
+    p = head(w, h, "Where the training data comes from and how the models are trained")
     p += panel(14, 216, "(a) Public data")
     p += panel(232, 624, "(b) Degradation, redrawn for every window")
     p += panel(640, 1016, "(c) Training and selection")
@@ -402,20 +402,11 @@ def training() -> None:
     p.append(line(820, 108, bx - 4, 92, arrow=True))
     p.append(line(820, 128, bx - 4, 150, arrow=True))
 
-    my = 296
-    p.append(rect(20, my, 604, 68, "#ffffff", ORANGE, 1.2, dash="5 3"))
-    p.append(text(322, my + 28, "The provided match (FC Barcelona vs Athletic Club) is never used "
-                  "to train or to tune", 12.5))  # fmt: skip
-    p.append(text(322, my + 51, "its tracking is only described, without any label, to set the "
-                  "degradation ranges", 11, MUTED))  # fmt: skip
-    ax = x2 + pw / 2
-    p.append(line(ax, my - 2, ax, py + ph + 62, RULE, 1.0, dash="3 3", arrow=True))
-    p.append(text(ax + 8, my - 12, "label-free description", 10.5, MUTED, "start", "italic"))
-    p.append(rect(712, my, 304, 68, "#ffffff", RULE, 0.9))
-    p.append(text(864, my + 28, "Prediction on the provided match", 12.5))
-    p.append(text(864, my + 51, "public 5 minutes: checks only", 11, MUTED))
-    p.append(line(628, my + 34, 708, my + 34, arrow=True))
-    p.append(line(bx + bw / 2, 186, bx + bw / 2, my - 4, arrow=True))
+    my = 212
+    p.append(rect(bx, my, bw, 58, PALE_BLUE, BLUE, 1.1))
+    p.append(text(bx + bw / 2, my + 24, "Prediction", 13))
+    p.append(text(bx + bw / 2, my + 46, "on the provided match", 10.5, MUTED))
+    p.append(line(bx + bw / 2, 185, bx + bw / 2, my - 4, arrow=True))
     save("training.svg", p)
 
 
