@@ -1,8 +1,8 @@
 """Train the two logistic models and choose the decoder parameters, on OTHER games only.
 
-    python -m mtah.solutions.ali.bench          # once: the benchmark bundles
-    python -m mtah.solutions.ali.train          # leave-one-game-out report + weights.json
-    python -m mtah.solutions.ali.train --search # also search the decoder parameters (slow)
+    python -m mtah.solutions.dimacodm.bench          # once: the benchmark bundles
+    python -m mtah.solutions.dimacodm.train          # leave-one-game-out report + weights.json
+    python -m mtah.solutions.dimacodm.train --search # also search the decoder parameters (slow)
 
 Leave-one-game-out: the models are fitted on every game but one and scored on that one, so every
 number printed here is measured on a game the models never saw. weights.json is then fitted on
@@ -24,10 +24,15 @@ from rich.console import Console
 from mtah.data.match import MatchData
 from mtah.evaluation import evaluate, load_gt
 from mtah.labels import A, D, H, X
-from mtah.solutions.ali.bench import iter_bundles
-from mtah.solutions.ali.features import DEAD_FEATURES, TEAM_FEATURES, FrameFeatures, frame_features
-from mtah.solutions.ali.model import Weights, fit_logistic, logit
-from mtah.solutions.ali.solution import AliSolution, decode_features
+from mtah.solutions.dimacodm.bench import iter_bundles
+from mtah.solutions.dimacodm.features import (
+    DEAD_FEATURES,
+    TEAM_FEATURES,
+    FrameFeatures,
+    frame_features,
+)
+from mtah.solutions.dimacodm.model import Weights, fit_logistic, logit
+from mtah.solutions.dimacodm.solution import DimacodmLogisticSolution, decode_features
 
 console = Console(width=140)
 app = typer.Typer(add_completion=False)
@@ -173,10 +178,12 @@ def main(
 ) -> None:
     from mtah.config import parse_overrides
 
-    params = {**AliSolution.defaults, **parse_overrides(param or [])}
+    params = {**DimacodmLogisticSolution.defaults, **parse_overrides(param or [])}
     games = [load(b, int(params["ball_gap_frames"])) for b in iter_bundles(root, dataset)]
     if len(games) < 2:
-        raise typer.BadParameter("need the benchmark bundles: python -m mtah.solutions.ali.bench")
+        raise typer.BadParameter(
+            "need the benchmark bundles: python -m mtah.solutions.dimacodm.bench"
+        )
     if search:
         params, value = coordinate_search(games, params)
         console.print(f"best mean LOGO spellF1 {value:.4f} with {params}")

@@ -30,7 +30,7 @@ from typing import Any
 import numpy as np
 import numpy.typing as npt
 
-from mtah.solutions.ali.deep_features import N_GLOBAL, N_TOKEN, TEAM_COLUMN, swap_teams
+from mtah.solutions.dimacodm.deep_features import N_GLOBAL, N_TOKEN, TEAM_COLUMN, swap_teams
 
 FloatArray = npt.NDArray[np.float64]
 InputArray = npt.NDArray[np.float32]  # model inputs, as deep_features.inputs makes them

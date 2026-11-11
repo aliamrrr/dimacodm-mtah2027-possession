@@ -3,9 +3,9 @@
 This is where versions are compared and parameters chosen, legitimately, since the labels come
 from other matches. Never on the public 5 minutes of BAR-ATH (RULES.md).
 
-    python -m mtah.solutions.ali.evaluate dummy ali               # every bundle under <cache>/bench
-    python -m mtah.solutions.ali.evaluate ali -p switch_cost=25   # one parameter changed
-    python -m mtah.solutions.ali.evaluate ali --synthetic data_synthetic
+    python -m mtah.solutions.dimacodm.evaluate dummy dimacodm_logistic               # every bundle under <cache>/bench
+    python -m mtah.solutions.dimacodm.evaluate dimacodm_logistic -p switch_cost=25   # one parameter changed
+    python -m mtah.solutions.dimacodm.evaluate dimacodm_logistic --synthetic data_synthetic
 """
 
 from __future__ import annotations
@@ -23,7 +23,7 @@ from mtah.config import load_config, parse_overrides
 from mtah.data.match import MatchData
 from mtah.evaluation import evaluate, load_gt
 from mtah.pipeline import predict
-from mtah.solutions.ali.bench import iter_bundles
+from mtah.solutions.dimacodm.bench import iter_bundles
 
 console = Console(width=150)
 app = typer.Typer(add_completion=False)
@@ -111,7 +111,7 @@ def main(
     if synthetic is not None:
         bundles.append(synthetic)
     if not bundles:
-        raise typer.BadParameter("no bundle: run `python -m mtah.solutions.ali.bench` first")
+        raise typer.BadParameter("no bundle: run `python -m mtah.solutions.dimacodm.bench` first")
     run_table(solutions, bundles, parse_overrides(param or []))
 
 

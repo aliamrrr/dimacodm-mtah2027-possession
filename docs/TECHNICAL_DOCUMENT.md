@@ -45,7 +45,7 @@ floor at 0.5 s, so short possessions are not drowned by long ones.
 same file comes out on any machine. It takes about 15 minutes on a 4-core laptop, without a GPU.
 
 **Why this rather than something else.** A logistic model on hand-made distance features with the
-same decoder (`ali`, kept in the repository as the reference) reaches 0.46 on our first benchmark
+same decoder (`dimacodm_logistic`, kept in the repository as the reference) reaches 0.46 on our first benchmark
 against 0.75 for the deep model: possession depends on the configuration of all players and on
 what happens seconds before and after, which a set model with temporal context captures and
 per-frame distances do not.
@@ -180,7 +180,7 @@ cd dimacodm-mtah2027-possession
 uv sync --locked
 # unpack the data bundle into data/, or set MTAH_DATA_DIR
 uv run mtah data check-loader
-uv run mtah final ali_deep          # writes final/DIMACodm.csv; compare with final/SUBMISSION.json
+uv run mtah final dimacodm          # writes final/DIMACodm.csv; compare with final/SUBMISSION.json
 ```
 
 Python 3.11 and every dependency are pinned in `uv.lock`. No GPU; `mtah final` runs the solution

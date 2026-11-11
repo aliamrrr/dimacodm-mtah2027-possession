@@ -1,6 +1,6 @@
 # Training
 
-The weights in `models/ali_deep/` were produced by the code in this repository, on public data
+The weights in `models/dimacodm/` were produced by the code in this repository, on public data
 about other games only. Nothing from the provided match is needed to train, and nothing from it
 was ever sent to the training machines.
 
@@ -10,7 +10,7 @@ and the prediction from them is byte-reproducible. This page documents how they 
 ## Data
 
 Downloaded by the code on first use, each file checked against a pinned hash
-(`src/mtah/solutions/ali/bench.py`). About 3 GB.
+(`src/mtah/solutions/dimacodm/bench.py`). About 3 GB.
 
 | source | games | licence | role |
 |---|---|---|---|
@@ -20,12 +20,12 @@ Downloaded by the code on first use, each file checked against a pinned hash
 
 ## Recipe
 
-`src/mtah/solutions/ali/train_gpu.sh` runs it end to end on a machine with one GPU:
+`src/mtah/solutions/dimacodm/train_gpu.sh` runs it end to end on a machine with one GPU:
 
 ```bash
 git clone https://github.com/aliamrrr/dimacodm-mtah2027-possession.git
 cd dimacodm-mtah2027-possession
-FOLDS="0" bash src/mtah/solutions/ali/train_gpu.sh      # one fold; folds 0 to 5 make the ensemble
+FOLDS="0" bash src/mtah/solutions/dimacodm/train_gpu.sh      # one fold; folds 0 to 5 make the ensemble
 ```
 
 - Folds 0 to 4 each hold two of the ten benchmark games out, train on the other eight and on the
@@ -47,19 +47,19 @@ holds every training game in memory, about 2.6 GB each.
 ## After training
 
 ```bash
-uv run python -m mtah.solutions.ali.bench --profile real-like-moving      # benchmark bundles
-uv run python -m mtah.solutions.ali.deep_tune --convention dfl --objective balanced \
+uv run python -m mtah.solutions.dimacodm.bench --profile real-like-moving      # benchmark bundles
+uv run python -m mtah.solutions.dimacodm.deep_tune --convention dfl --objective balanced \
     --profile real-like-moving \
-    --start models/ali_deep/decoder_search_start.json                     # decoder, out-of-fold
-uv run python -m mtah.solutions.ali.deep_weights write                    # pin the weights
+    --start models/dimacodm/decoder_search_start.json                     # decoder, out-of-fold
+uv run python -m mtah.solutions.dimacodm.deep_weights write                    # pin the weights
 ```
 
 `deep_tune` searches the decoder parameters by coordinate ascent on the out-of-fold predictions
-that training writes under `models/ali_deep/oof_conv/` (not committed: they are large and can be
+that training writes under `models/dimacodm/oof_conv/` (not committed: they are large and can be
 regenerated). Each game is decoded exactly as the solution decodes a match and scored with the
 official scorer against its own labels. The search starts from the decoder of an earlier model
-(`decoder_search_start.json`). Its result, `models/ali_deep/decoder_dfl_balanced_moving.json`, is
-what `configs/ali_deep.yaml` holds.
+(`decoder_search_start.json`). Its result, `models/dimacodm/decoder_dfl_balanced_moving.json`, is
+what `configs/dimacodm.yaml` holds.
 
 ## What is and is not reproducible
 
@@ -68,4 +68,4 @@ what `configs/ali_deep.yaml` holds.
 - Training: the recipe and the seeds are fixed, but GPU arithmetic is not deterministic to the
   last bit. Running it again gives weights that are close, not identical. The submission is
   therefore defined by the published weights, which are pinned by sha256 in
-  `src/mtah/solutions/ali/deep_weights.json`.
+  `src/mtah/solutions/dimacodm/deep_weights.json`.

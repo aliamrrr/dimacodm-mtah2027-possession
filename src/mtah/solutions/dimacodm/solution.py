@@ -1,4 +1,4 @@
-"""ali: control-based possession with a dead-ball detector and a 4-state decoder.
+"""dimacodm_logistic: control-based possession with a dead-ball detector and a 4-state decoder.
 
 Per frame, two pieces of evidence, both from positions only:
 
@@ -26,15 +26,15 @@ import numpy as np
 from mtah.data.match import MatchData
 from mtah.labels import Codes, X
 from mtah.solutions import register
-from mtah.solutions.ali.features import FrameFeatures, frame_features
-from mtah.solutions.ali.model import (
+from mtah.solutions.base import Solution
+from mtah.solutions.dimacodm.features import FrameFeatures, frame_features
+from mtah.solutions.dimacodm.model import (
     Weights,
     controlled_possession,
     decode,
     logit,
     transition_costs,
 )
-from mtah.solutions.base import Solution
 
 
 def decode_features(
@@ -107,13 +107,13 @@ def decode_logits(
 
 
 @register
-class AliSolution(Solution):
-    name = "ali"
+class DimacodmLogisticSolution(Solution):
+    name = "dimacodm_logistic"
     summary = "ball control + dead-ball detector (trained on other games) + 4-state Viterbi"
     authors = ("DIMACodm",)
-    # Every key can be overridden in configs/ali.yaml -> params, or on the command line: -p key=value
+    # Every key can be overridden in configs/dimacodm_logistic.yaml -> params, or on the command line: -p key=value
     defaults: ClassVar[dict[str, Any]] = {
-        # Chosen by `python -m mtah.solutions.ali.train --search` on the benchmark of other games
+        # Chosen by `python -m mtah.solutions.dimacodm.train --search` on the benchmark of other games
         # (3 Metrica + 7 DFL, leave-one-game-out spellF1: mean of the per-source means 0.4602),
         # never on BAR-ATH.
         "ball_gap_frames": 25,  # bridge ball dropouts up to this long (frames): 1 s

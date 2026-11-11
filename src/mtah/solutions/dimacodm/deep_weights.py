@@ -1,9 +1,9 @@
-"""The weights of ali_deep: files under models/ali_deep/, pinned by sha256 in deep_weights.json.
+"""The weights of dimacodm: files under models/dimacodm/, pinned by sha256 in deep_weights.json.
 
-    python -m mtah.solutions.ali.deep_weights write   # after training: pin models/ali_deep
+    python -m mtah.solutions.dimacodm.deep_weights write   # after training: pin models/dimacodm
 
 The six fold models (about 2.7 MB each) are committed with the code. deep_weights.json records the
-sha256 of each one, and AliDeepSolution only loads files that match it, so a prediction always
+sha256 of each one, and DimacodmSolution only loads files that match it, so a prediction always
 comes from the published weights (rule 3 of the challenge: the repository regenerates the file).
 """
 
@@ -20,7 +20,7 @@ from mtah.paths import REPO_ROOT
 
 app = typer.Typer(add_completion=False)
 MANIFEST = Path(__file__).with_name("deep_weights.json")
-MODELS = REPO_ROOT / "models" / "ali_deep"
+MODELS = REPO_ROOT / "models" / "dimacodm"
 
 
 def sha256(path: Path) -> str:
@@ -37,7 +37,7 @@ def manifest() -> dict[str, Any] | None:
 
 def verified(folder: Path) -> list[Path]:
     """The manifest's model files, each checked against its sha256 (sorted). Another folder than
-    models/ali_deep (tests, experiments), or no manifest yet: every fold*.npz there, unchecked."""
+    models/dimacodm (tests, experiments), or no manifest yet: every fold*.npz there, unchecked."""
     pinned = manifest()
     if pinned is None or folder.resolve() != MODELS.resolve():
         return sorted(folder.glob("fold*.npz"))

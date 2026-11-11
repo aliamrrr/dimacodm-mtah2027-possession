@@ -1,12 +1,12 @@
-"""ali_deep: the set-transformer + TCN model (trained on other games) and the Viterbi decoder.
+"""dimacodm: the set-transformer + TCN model (trained on other games) and the Viterbi decoder.
 
-Registered only once trained weights exist (models/ali_deep/fold*.npz, written by deep_train on a
+Registered only once trained weights exist (models/dimacodm/fold*.npz, written by deep_train on a
 GPU), so the rest of the repository works without them. Inference is numpy (deep_net): the
 submission needs no torch. Per frame, the deep model's (team, dead) log-odds are averaged over the
 fold models (5 folds + fold 5, trained on all ten games), the label conventions listed in
-`conventions` and the team-swapped mirror. They can be blended with the logistic ones of `ali`
+`conventions` and the team-swapped mirror. They can be blended with the logistic ones of `dimacodm_logistic`
 (`blend` = weight of the deep model; 1 in the submitted configuration, the deep model alone),
-then they are decoded by the same 4-state Viterbi as `ali`.
+then they are decoded by the same 4-state Viterbi as `dimacodm_logistic`.
 Every parameter comes from out-of-fold predictions on other games (deep_tune).
 """
 
@@ -21,29 +21,29 @@ from mtah.data.match import MatchData
 from mtah.labels import Codes, X
 from mtah.paths import REPO_ROOT
 from mtah.solutions import register
-from mtah.solutions.ali.deep_features import inputs
-from mtah.solutions.ali.deep_net import NumpyNet, ensemble_outputs
-from mtah.solutions.ali.features import frame_features
-from mtah.solutions.ali.model import Weights, logit
-from mtah.solutions.ali.solution import AliSolution, decode_logits
 from mtah.solutions.base import Solution
+from mtah.solutions.dimacodm.deep_features import inputs
+from mtah.solutions.dimacodm.deep_net import NumpyNet, ensemble_outputs
+from mtah.solutions.dimacodm.features import frame_features
+from mtah.solutions.dimacodm.model import Weights, logit
+from mtah.solutions.dimacodm.solution import DimacodmLogisticSolution, decode_logits
 
-MODELS = REPO_ROOT / "models" / "ali_deep"
+MODELS = REPO_ROOT / "models" / "dimacodm"
 
 
 def fold_models(folder: Path = MODELS) -> list[Path]:
     return sorted(folder.glob("fold*.npz"))
 
 
-class AliDeepSolution(Solution):
-    name = "ali_deep"
+class DimacodmSolution(Solution):
+    name = "dimacodm"
     summary = "set transformer + TCN on the tracking (trained on other games) + Viterbi"
     authors = ("DIMACodm",)
     defaults: ClassVar[dict[str, Any]] = {
         # Chosen out-of-fold by `deep_tune --convention dfl --objective balanced --profile
         # real-like-moving` on the 10 other games (mean of the per-source means 0.7515, labels
-        # as published), never on BAR-ATH: see configs/ali_deep.yaml.
-        **AliSolution.defaults,
+        # as published), never on BAR-ATH: see configs/dimacodm.yaml.
+        **DimacodmLogisticSolution.defaults,
         "team_scale": 0.3,
         "dead_scale": 0.35,
         "dead_bias": -2.5,
@@ -64,7 +64,7 @@ class AliDeepSolution(Solution):
         # label-convention head(s): 1 = DFL, flags of the corrected tracking, as the ground truth
         # is built (CHALLENGE.md); 0 = Metrica events
         "conventions": [1],
-        "models": "models/ali_deep",
+        "models": "models/dimacodm",
     }
 
     def predict(self, match: MatchData) -> Codes:
@@ -82,8 +82,8 @@ class AliDeepSolution(Solution):
         team_change = None
         blend = float(p["blend"])
         if blend > 0:
-            # imported here: `python -m mtah.solutions.ali.deep_weights` must not find it loaded
-            from mtah.solutions.ali.deep_weights import verified
+            # imported here: `python -m mtah.solutions.dimacodm.deep_weights` must not find it loaded
+            from mtah.solutions.dimacodm.deep_weights import verified
 
             nets = [NumpyNet.load(path) for path in verified(REPO_ROOT / str(p["models"]))]
             if not nets:
@@ -113,4 +113,4 @@ class AliDeepSolution(Solution):
 
 
 if fold_models():  # only once trained: the repository must work without the weights
-    register(AliDeepSolution)
+    register(DimacodmSolution)

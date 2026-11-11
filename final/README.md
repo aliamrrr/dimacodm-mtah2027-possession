@@ -1,6 +1,6 @@
 # final/: the submission file
 
-`uv run mtah final ali_deep` writes two files here:
+`uv run mtah final dimacodm` writes two files here:
 
 - `DIMACodm.csv`, the possession file to upload (ignored by git);
 - `SUBMISSION.json`, its sha256, the commit and configuration that produced it, and the outcome of

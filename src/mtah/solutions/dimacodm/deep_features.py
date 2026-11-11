@@ -19,7 +19,7 @@ import numpy as np
 import numpy.typing as npt
 
 from mtah.labels import A, H
-from mtah.solutions.ali.features import (
+from mtah.solutions.dimacodm.features import (
     _nearest_per_team,
     ball_track,
     halves_separation,

@@ -14,8 +14,8 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 
-from mtah.solutions.ali.deep_features import N_GLOBAL, N_TOKEN, TEAM_COLUMN
-from mtah.solutions.ali.deep_net import DeepConfig
+from mtah.solutions.dimacodm.deep_features import N_GLOBAL, N_TOKEN, TEAM_COLUMN
+from mtah.solutions.dimacodm.deep_net import DeepConfig
 
 
 class GELU(nn.Module):

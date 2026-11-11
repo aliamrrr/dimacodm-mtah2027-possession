@@ -15,8 +15,8 @@ explains them. Metrica's three public sample games (https://github.com/metrica-s
 4. writes a bundle in the official file formats, so `MatchData`, every solution and the official
    scorer run on it unchanged:
 
-    python -m mtah.solutions.ali.bench                     # <cache>/bench/metrica_{1,2,3}
-    mtah run ali -d .cache/bench/metrica_1                  # scored against its ground truth
+    python -m mtah.solutions.dimacodm.bench                     # <cache>/bench/metrica_{1,2,3}
+    mtah run dimacodm_logistic -d .cache/bench/metrica_1                  # scored against its ground truth
 
 The bundle reuses the synthetic layout (`synthetic/meta.json`, `synthetic/gt_full.csv`) so the
 rest of the code needs no change; `meta.json` says where it really comes from. No Smart Tagging and no
@@ -29,7 +29,7 @@ matches whose DFL position data carry, on every frame, `BallStatus` (alive / dea
 the organisers describe ("D where the corrected tracking marks the ball dead, otherwise the team the
 tracking names as owning it"). No label has to be derived from events there.
 
-    python -m mtah.solutions.ali.bench --game dfl_J03WMX    # or --dataset dfl / metrica / all
+    python -m mtah.solutions.dimacodm.bench --game dfl_J03WMX    # or --dataset dfl / metrica / all
 """
 
 from __future__ import annotations
@@ -880,7 +880,7 @@ def degrade(
         slots[start:stop, slot] = game.players[start:stop, player] + offset
     slots += rng.normal(0.0, s.position_noise_m, slots.shape) / scale
     if s.blackout_share > 0:
-        from mtah.solutions.ali.deep_data import blackouts  # one definition for both
+        from mtah.solutions.dimacodm.deep_data import blackouts  # one definition for both
 
         blackouts(slots, game.ball[:, 0].astype(np.float64), rng, s.blackout_share, (2.0, 14.0))
 
@@ -889,7 +889,7 @@ def degrade(
     for start, stop in _gap_rows(dead):
         _dead_ball_path(ball, start, stop, rng, s)
     if s.dead_ball_motion > 0:
-        from mtah.solutions.ali.deep_data import dead_ball_motion
+        from mtah.solutions.dimacodm.deep_data import dead_ball_motion
 
         dead_ball_motion(ball, game.players.astype(np.float64), dead, rng, s.dead_ball_motion)
     missing = _ball_dropouts(ball, game.players, dead, rng, s)

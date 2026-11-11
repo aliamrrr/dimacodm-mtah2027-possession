@@ -35,7 +35,7 @@ dev = [
     "pre-commit>=4.0",
     "types-PyYAML>=6.0",
 ]
-# Training of the `ali_deep` model only (on a GPU machine, on public data about other games):
+# Training of the `dimacodm` model only (on a GPU machine, on public data about other games):
 # never needed to reproduce a submission, whose inference is numpy. `uv sync --group train`.
 train = ["torch==2.14.1"]
 

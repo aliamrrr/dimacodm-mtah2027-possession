@@ -3,15 +3,15 @@
 On a GPU machine (docs/TRAINING.md, train_gpu.sh):
 
     uv sync --locked --group train
-    python -m mtah.solutions.ali.bench --dataset all             # public data -> bundles + caches
-    python -m mtah.solutions.ali.deep_train --device cuda        # every fold, one after the other
-    python -m mtah.solutions.ali.deep_train --device cuda --fold 2   # or one fold per GPU
-    python -m mtah.solutions.ali.deep_tune                       # decoder + blend, out-of-fold
+    python -m mtah.solutions.dimacodm.bench --dataset all             # public data -> bundles + caches
+    python -m mtah.solutions.dimacodm.deep_train --device cuda        # every fold, one after the other
+    python -m mtah.solutions.dimacodm.deep_train --device cuda --fold 2   # or one fold per GPU
+    python -m mtah.solutions.dimacodm.deep_tune                       # decoder + blend, out-of-fold
 
 Locally, `--smoke` runs a tiny model for a few steps to check the whole chain on CPU.
 
 Each fold holds two games out (both label conventions where possible), trains on the other eight,
-then writes, under --out (default models/ali_deep/):
+then writes, under --out (default models/dimacodm/):
     fold{k}.npz        weights for deep_net.NumpyNet (what runs on BAR-ATH)
     fold{k}.pt         torch checkpoint (resume / inspection)
     oof/{game}.npz     out-of-fold team / dead log-odds on that game's benchmark bundle
@@ -43,9 +43,9 @@ from mtah.data.match import MatchData
 from mtah.evaluation import evaluate, load_gt
 from mtah.labels import X
 from mtah.paths import REPO_ROOT
-from mtah.solutions.ali.bench import default_out as bench_root
-from mtah.solutions.ali.bench import extra_games
-from mtah.solutions.ali.deep_data import (
+from mtah.solutions.dimacodm.bench import default_out as bench_root
+from mtah.solutions.dimacodm.bench import extra_games
+from mtah.solutions.dimacodm.deep_data import (
     CLEAN,
     FPS,
     IGNORE,
@@ -56,14 +56,14 @@ from mtah.solutions.ali.deep_data import (
     make_sample,
     sample_window,
 )
-from mtah.solutions.ali.deep_features import inputs, swap_teams
-from mtah.solutions.ali.deep_model import SetTCN, export_numpy
-from mtah.solutions.ali.deep_net import DeepConfig, log_odds
-from mtah.solutions.ali.model import decode, transition_costs
-from mtah.solutions.ali.solution import AliSolution
+from mtah.solutions.dimacodm.deep_features import inputs, swap_teams
+from mtah.solutions.dimacodm.deep_model import SetTCN, export_numpy
+from mtah.solutions.dimacodm.deep_net import DeepConfig, log_odds
+from mtah.solutions.dimacodm.model import decode, transition_costs
+from mtah.solutions.dimacodm.solution import DimacodmLogisticSolution
 
 app = typer.Typer(add_completion=False)
-OUT = REPO_ROOT / "models" / "ali_deep"
+OUT = REPO_ROOT / "models" / "dimacodm"
 FOLDS: list[list[str]] = [
     ["metrica_1", "dfl_J03WMX"],
     ["metrica_2", "dfl_J03WN1"],
@@ -250,7 +250,7 @@ def train_fold(
     # Only the centre of a window (full receptive field on both sides) is supervised: a longer
     # centre spends less of each window (GPU time and degradation) on unlabelled context.
     length = 2 * margin + (64 if smoke else centre)
-    gap = int(AliSolution.defaults["ball_gap_frames"])
+    gap = int(DimacodmLogisticSolution.defaults["ball_gap_frames"])
     torch.manual_seed(seed + k)
     model = SetTCN(cfg).to(device)
     if init is not None:  # continue from an exported fold (warm restart: new schedule, new data)
@@ -294,7 +294,7 @@ def train_fold(
         name: clean_inputs(name, gap) if clean else bundle_inputs(name, gap, limit, profile)
         for name in held_out
     }
-    params = dict(AliSolution.defaults)
+    params = dict(DimacodmLogisticSolution.defaults)
     amp = device.startswith("cuda")
     supervised = slice(margin, length - margin)
     began, seen = time.perf_counter(), 0
@@ -444,7 +444,7 @@ def main(
     do_tune: Annotated[bool, typer.Option("--tune", help="decoder search on out-of-fold")] = False,
 ) -> None:
     if do_tune:  # CPU only: deep_tune needs no torch
-        from mtah.solutions.ali.deep_tune import tune
+        from mtah.solutions.dimacodm.deep_tune import tune
 
         typer.echo(json.dumps(tune(out), indent=2))
         return

@@ -4,8 +4,8 @@ import numpy as np
 import pytest
 
 from mtah.labels import A, D, H
-from mtah.solutions.ali import deep_data
-from mtah.solutions.ali.deep_features import (
+from mtah.solutions.dimacodm import deep_data
+from mtah.solutions.dimacodm.deep_features import (
     COUNT_COLUMNS,
     N_GLOBAL,
     N_TOKEN,
@@ -13,7 +13,7 @@ from mtah.solutions.ali.deep_features import (
     inputs,
     swap_teams,
 )
-from mtah.solutions.ali.deep_net import DeepConfig, NumpyNet, ensemble_logits
+from mtah.solutions.dimacodm.deep_net import DeepConfig, NumpyNet, ensemble_logits
 
 SMALL = DeepConfig(d_token=16, heads=2, set_layers=1, d_frame=24, dilations=(1, 2, 4))
 
@@ -79,7 +79,7 @@ def test_degradation_targets():
 
 def test_numpy_forward_matches_torch(tmp_path):
     torch = pytest.importorskip("torch")
-    from mtah.solutions.ali.deep_model import SetTCN, export_numpy
+    from mtah.solutions.dimacodm.deep_model import SetTCN, export_numpy
 
     torch.manual_seed(0)
     model = SetTCN(SMALL).eval()
@@ -133,7 +133,7 @@ def test_boundary_head_numpy_matches_torch(tmp_path):
     torch = pytest.importorskip("torch")
     from dataclasses import replace
 
-    from mtah.solutions.ali.deep_model import SetTCN, export_numpy
+    from mtah.solutions.dimacodm.deep_model import SetTCN, export_numpy
 
     torch.manual_seed(2)
     model = SetTCN(replace(SMALL, boundary_head=True)).eval()
@@ -152,7 +152,7 @@ def test_boundary_head_numpy_matches_torch(tmp_path):
 
 
 def test_published_weights_are_pinned_by_sha256(tmp_path, monkeypatch):
-    from mtah.solutions.ali import deep_weights
+    from mtah.solutions.dimacodm import deep_weights
 
     models, other = tmp_path / "models", tmp_path / "other"
     models.mkdir()
@@ -176,12 +176,12 @@ def test_published_weights_are_pinned_by_sha256(tmp_path, monkeypatch):
 def test_ali_deep_solution_runs_end_to_end(mini_match, tmp_path):
     """Numpy inference of a (random) exported model inside the real solution, twice: same bytes."""
     torch = pytest.importorskip("torch")
-    from mtah.solutions.ali.deep_model import SetTCN, export_numpy
-    from mtah.solutions.ali.deep_solution import AliDeepSolution
+    from mtah.solutions.dimacodm.deep_model import SetTCN, export_numpy
+    from mtah.solutions.dimacodm.deep_solution import DimacodmSolution
 
     torch.manual_seed(1)
     export_numpy(SetTCN(SMALL).eval(), tmp_path / "fold0.npz")
-    solution = AliDeepSolution(models=str(tmp_path), blend=0.5)
+    solution = DimacodmSolution(models=str(tmp_path), blend=0.5)
     first = solution.predict(mini_match)
     second = solution.predict(mini_match)
     graded = mini_match.spec.graded_mask()
@@ -237,7 +237,7 @@ def test_blackouts_remove_players_and_their_possessor_targets():
 
 
 def test_real_like_benchmark_profile_is_smooth_with_long_ball_runs():
-    from mtah.solutions.ali import bench
+    from mtah.solutions.dimacodm import bench
 
     real = bench.PROFILES["real-like"]
     assert real.position_noise_m < 0.01 and real.ball_mean_gap_s >= 10 and real.blackout_share > 0

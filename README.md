@@ -36,7 +36,7 @@ Unpack the bundle into `data/` (layout in [data/README.md](data/README.md)), or 
 ```bash
 uv run mtah data check                 # files present, alignment, figures published in DATA.md
 uv run mtah data check-loader          # our loader rebuilds the four official baselines byte for byte
-uv run mtah final ali_deep             # writes final/DIMACodm.csv
+uv run mtah final dimacodm             # writes final/DIMACodm.csv
 ```
 
 `mtah final` runs the solution twice (tracking cache on, then off), requires the two files to be
@@ -46,16 +46,16 @@ sha256. The value to compare with is in [final/SUBMISSION.json](final/SUBMISSION
 For a single run with its score on the public 5 minutes (a pipeline check, never a tuning set):
 
 ```bash
-uv run mtah run ali_deep               # writes submissions/ali_deep/<run>/submission.csv
+uv run mtah run dimacodm               # writes submissions/dimacodm/<run>/submission.csv
 uv run mtah official-board             # the organisers' own run_evaluation.py on that file
-uv run mtah reproduce submissions/ali_deep/latest/manifest.json
+uv run mtah reproduce submissions/dimacodm/latest/manifest.json
 ```
 
 Without the data, the whole pipeline can be tried on a synthetic match generated from a seed:
 
 ```bash
 uv run mtah synthetic --mini
-uv run mtah run ali_deep --data-dir data_synthetic
+uv run mtah run dimacodm --data-dir data_synthetic
 ```
 
 ## Tests
@@ -73,13 +73,13 @@ with the training code.
 ## Layout
 
 ```
-configs/ali_deep.yaml        parameters of the submitted solution
+configs/dimacodm.yaml        parameters of the submitted solution
 src/mtah/
   cli.py                     the `mtah` command
   pipeline.py                run, validate, score, manifest; reproduce; final
   data/                      loaders: tracking (ATD), Smart Tagging, homography
-  solutions/ali/             the solution
-    deep_solution.py           inference on a match (entry point of `ali_deep`)
+  solutions/dimacodm/        the solution
+    deep_solution.py           inference on a match (entry point of `dimacodm`)
     deep_features.py           per-frame tokens and global features
     deep_net.py                the network in numpy (inference)
     model.py                   the Viterbi decoder
@@ -91,7 +91,7 @@ src/mtah/
     train_gpu.sh               the training recipe, end to end
   solutions/dummy/           the official baseline, re-implemented (loader check)
   synthetic/                 generator of a fake match in the official formats (tests)
-models/ali_deep/             the six trained models, pinned by sha256
+models/dimacodm/             the six trained models, pinned by sha256
 vendor/official/             exact copy of the organisers' scorer, validator and documentation
 tests/
 docs/

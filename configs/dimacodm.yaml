@@ -1,14 +1,14 @@
-# Configuration of `ali_deep`, the submitted solution.
+# Configuration of `dimacodm`, the submitted solution.
 # Deep model (set transformer + temporal convolution, +/- 20 s of context) trained on a GPU on
 # OTHER games only (3 Metrica sample games + 7 DFL / IDSSE games + 20 SkillCorner games used for
 # training only): 5 folds by game + 1 fold on all ten, 20 000 steps, spell-balanced loss, boundary
 # head, tracking degraded the way an automatic tracking really looks. Weights under
-# models/ali_deep/, pinned by sha256 in src/mtah/solutions/ali/deep_weights.json.
+# models/dimacodm/, pinned by sha256 in src/mtah/solutions/dimacodm/deep_weights.json.
 # Decoder chosen out-of-fold on those other games, never on BAR-ATH:
-#   python -m mtah.solutions.ali.deep_tune --convention dfl --objective balanced \
+#   python -m mtah.solutions.dimacodm.deep_tune --convention dfl --objective balanced \
 #       --profile real-like-moving
 # Out-of-fold spellF1 0.7515 (Metrica 0.7803, DFL 0.7227), labels as published.
-solution: ali_deep
+solution: dimacodm
 seed: 0
 params:
   ball_gap_frames: 25
@@ -26,4 +26,4 @@ params:
   # controlled-possession rule, off: the public reference keeps brief possessions
   min_spell_s: 0.0
   conventions: [1]
-  models: models/ali_deep
+  models: models/dimacodm

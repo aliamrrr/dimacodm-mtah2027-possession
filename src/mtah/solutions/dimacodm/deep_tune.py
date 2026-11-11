@@ -1,10 +1,10 @@
-"""Decoder parameters and deep / logistic blend of ali_deep, on out-of-fold predictions.
+"""Decoder parameters and deep / logistic blend of dimacodm, on out-of-fold predictions.
 
-    python -m mtah.solutions.ali.deep_tune                          # models/ali_deep/oof/*.npz
-    python -m mtah.solutions.ali.deep_tune --convention dfl --objective dfl
+    python -m mtah.solutions.dimacodm.deep_tune                          # models/dimacodm/oof/*.npz
+    python -m mtah.solutions.dimacodm.deep_tune --convention dfl --objective dfl
 
 Each game's deep log-odds come from the fold model that never saw it (deep_train), its logistic
-log-odds from weights fitted on the other games, and both are decoded exactly as AliDeepSolution
+log-odds from weights fitted on the other games, and both are decoded exactly as DimacodmSolution
 decodes BAR-ATH (solution.decode_logits, speed-trend bonuses included). The parameters maximise
 the mean of the per-source means of spellF1 (train.balanced_mean), by coordinate ascent. Other
 games only, CPU only (no torch); the games are decoded in parallel.
@@ -28,13 +28,13 @@ import typer
 from mtah.evaluation import evaluate
 from mtah.labels import X
 from mtah.paths import REPO_ROOT
-from mtah.solutions.ali import train as logistic
-from mtah.solutions.ali.bench import default_out as bench_root
-from mtah.solutions.ali.model import controlled_possession, logit
-from mtah.solutions.ali.solution import AliSolution, decode_logits
+from mtah.solutions.dimacodm import train as logistic
+from mtah.solutions.dimacodm.bench import default_out as bench_root
+from mtah.solutions.dimacodm.model import controlled_possession, logit
+from mtah.solutions.dimacodm.solution import DimacodmLogisticSolution, decode_logits
 
 app = typer.Typer(add_completion=False)
-OUT = REPO_ROOT / "models" / "ali_deep"
+OUT = REPO_ROOT / "models" / "dimacodm"
 BLENDS = (0.0, 0.25, 0.5, 0.75, 1.0)
 BOUNDARY_GAINS = (0.0, 2.0, 4.0, 7.0, 10.0, 15.0, 20.0)
 HEADS = {"both": (0, 1), "metrica": (0,), "dfl": (1,)}  # label-convention heads of the model
@@ -59,7 +59,7 @@ def _init(games: dict[str, dict[str, Any]]) -> None:
 
 
 def _score(job: tuple[str, dict[str, Any]]) -> tuple[str, float]:
-    """spellF1 of one game, its log-odds blended and decoded as AliDeepSolution.predict does."""
+    """spellF1 of one game, its log-odds blended and decoded as DimacodmSolution.predict does."""
     name, params = job
     game = _GAMES[name]
     w = float(params["blend"])
@@ -84,7 +84,7 @@ def load_games(
     if not oof:
         raise typer.BadParameter(f"no out-of-fold predictions under {folder}")
     key = "" if convention == "both" else str(HEADS[convention][0])
-    gap = int(AliSolution.defaults["ball_gap_frames"])
+    gap = int(DimacodmLogisticSolution.defaults["ball_gap_frames"])
     games = [logistic.load(bench_root(profile) / name, gap) for name in oof]
     payload = {}
     for game in games:
@@ -146,7 +146,7 @@ def tune(
     if blend_with_logistic:
         space["blend"] = BLENDS
     best: dict[str, Any] = {
-        **AliSolution.defaults,
+        **DimacodmLogisticSolution.defaults,
         "blend": 0.5 if blend_with_logistic else 1.0,
         "conventions": list(HEADS[convention]),
         "boundary_gain": 0.0,

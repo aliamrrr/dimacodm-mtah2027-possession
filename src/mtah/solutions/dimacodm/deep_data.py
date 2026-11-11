@@ -23,8 +23,8 @@ import pandas as pd
 
 from mtah.labels import A, D, H, X
 from mtah.paths import cache_dir
-from mtah.solutions.ali import bench
-from mtah.solutions.ali.deep_features import inputs, swap_teams
+from mtah.solutions.dimacodm import bench
+from mtah.solutions.dimacodm.deep_features import inputs, swap_teams
 
 N_SLOTS = bench.N_SLOTS
 FPS = bench.FPS

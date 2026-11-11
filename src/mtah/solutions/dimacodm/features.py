@@ -1,4 +1,4 @@
-"""Per-frame evidence for the `ali` solution. Pure functions: arrays in, arrays out, no state.
+"""Per-frame evidence for the `dimacodm_logistic` solution. Pure functions: arrays in, arrays out, no state.
 
 Everything is computed from positions only (metres), never from a field whose definition we cannot
 check on the real data (the ATD speed column, the third ball field): the same code then means the

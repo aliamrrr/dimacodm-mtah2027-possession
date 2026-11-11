@@ -39,14 +39,14 @@ vendor/official/evaluation/reports/
 vendor/official/evaluation/results/
 vendor/official/evaluation/scoreboard.csv
 
-# -- models: only the published weights of ali_deep, trained on other games ---------------------
+# -- models: only the published weights of dimacodm, trained on other games ---------------------
 models/*
 !models/README.md
-!models/ali_deep/
-models/ali_deep/*
-!models/ali_deep/fold*.npz
-!models/ali_deep/fold*.json
-!models/ali_deep/decoder_*.json
+!models/dimacodm/
+models/dimacodm/*
+!models/dimacodm/fold*.npz
+!models/dimacodm/fold*.json
+!models/dimacodm/decoder_*.json
 
 # -- secrets -----------------------------------------------------------------------------------
 .env

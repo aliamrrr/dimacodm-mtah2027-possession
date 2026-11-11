@@ -64,7 +64,7 @@ class Weights:
     dead_features: list[str]
     team_features: list[str]
     trained_on: list[str]  # benchmark bundles (other games)
-    note: str = "trained by `python -m mtah.solutions.ali.train` on other games only"
+    note: str = "trained by `python -m mtah.solutions.dimacodm.train` on other games only"
 
     def save(self, path: Path = WEIGHTS_PATH) -> None:
         with open(path, "w", encoding="utf-8", newline="\n") as handle:

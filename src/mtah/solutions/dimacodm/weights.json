@@ -79,5 +79,5 @@
     "metrica_2",
     "metrica_3"
   ],
-  "note": "trained by `python -m mtah.solutions.ali.train` on other games only"
+  "note": "trained by `python -m mtah.solutions.dimacodm.train` on other games only"
 }

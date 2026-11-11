@@ -1,4 +1,4 @@
-"""Unit tests of the `ali` solution: labels of the other games, features, rules, decoder.
+"""Unit tests of the `dimacodm_logistic` solution: labels of the other games, features, rules, decoder.
 
 The generic contract (length, determinism, official validator) is tested for every solution
 in test_solutions_contract.py. The `mini_match` fixture (a short synthetic match) comes from
@@ -10,9 +10,9 @@ import numpy as np
 from mtah.common.smoothing import viterbi
 from mtah.labels import A, D, H, X
 from mtah.solutions import get
-from mtah.solutions.ali import bench
-from mtah.solutions.ali import features as F
-from mtah.solutions.ali.model import (
+from mtah.solutions.dimacodm import bench
+from mtah.solutions.dimacodm import features as F
+from mtah.solutions.dimacodm.model import (
     S_A,
     S_DA,
     S_DH,
@@ -27,7 +27,7 @@ from mtah.solutions.ali.model import (
 
 
 def test_ali_runs_on_mini_match(mini_match):
-    codes = get("ali")().predict(mini_match)
+    codes = get("dimacodm_logistic")().predict(mini_match)
     assert codes.shape == (mini_match.spec.n_frames,)
     assert set(np.unique(codes)) <= {0, 1, 2, 3}
     graded = mini_match.spec.graded_mask()
@@ -168,7 +168,7 @@ def test_skillcorner_parser_resamples_and_labels(tmp_path):
 
 
 def test_skillcorner_dead_frames_are_never_targets():
-    from mtah.solutions.ali import deep_data
+    from mtah.solutions.dimacodm import deep_data
 
     n = 3000
     players = np.full((n, 22, 2), 0.5, dtype=np.float32)
@@ -372,18 +372,20 @@ def test_controlled_possession_never_crosses_a_half_and_keeps_stoppages():
 
 
 def test_min_spell_s_is_off_by_default_and_applies_the_rule_when_set():
-    from mtah.solutions.ali.deep_solution import AliDeepSolution
-    from mtah.solutions.ali.solution import AliSolution, decode_logits
+    from mtah.solutions.dimacodm.deep_solution import DimacodmSolution
+    from mtah.solutions.dimacodm.solution import DimacodmLogisticSolution, decode_logits
 
-    assert "min_spell_s" not in AliSolution.defaults
-    assert AliDeepSolution.defaults["min_spell_s"] == 0.0  # the public reference keeps brief spells
+    assert "min_spell_s" not in DimacodmLogisticSolution.defaults
+    assert (
+        DimacodmSolution.defaults["min_spell_s"] == 0.0
+    )  # the public reference keeps brief spells
     rng = np.random.default_rng(0)
     n = 4000
     team = np.cumsum(rng.normal(0, 0.6, n))
     team = 6 * np.sin(team / 4)
     dead = np.full(n, -6.0)
     trend = np.zeros(n)
-    params = {**AliSolution.defaults, "switch_cost": 1.0}
+    params = {**DimacodmLogisticSolution.defaults, "switch_cost": 1.0}
     raw = decode_logits(team, dead, trend, params, [(0, n)])
     ruled = decode_logits(team, dead, trend, {**params, "min_spell_s": 2.0}, [(0, n)], fps=25)
     assert (ruled == controlled_possession(raw, [(0, n)], 50)).all()
