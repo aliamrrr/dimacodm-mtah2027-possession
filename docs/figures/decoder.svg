@@ -1,52 +1,52 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 262" width="820" height="262" role="img" aria-label="The four states of the decoder and the cost of each move">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 830 284" width="830" height="284" role="img" aria-label="The four states of the decoder and the cost of each move">
 <title>The four states of the decoder and the cost of each move</title>
 <defs>
-<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,1 L10,5 L0,9 z" fill="#111111"/></marker>
+<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L10,5 L0,9 z" fill="#111111"/></marker>
 </defs>
-<rect x="0" y="0" width="820" height="262" fill="#ffffff"/>
-<text font-family="'Times New Roman', Times, serif" x="229.0" y="20" font-size="13" fill="#111111" text-anchor="middle" font-style="italic" font-weight="normal">(a) States and allowed moves</text>
-<path d="M18,36 L18,30 L440,30 L440,36" fill="none" stroke="#444444" stroke-width="0.8"/>
-<text font-family="'Times New Roman', Times, serif" x="636.0" y="20" font-size="13" fill="#111111" text-anchor="middle" font-style="italic" font-weight="normal">(b) Cost of each move</text>
-<path d="M470,36 L470,30 L802,30 L802,36" fill="none" stroke="#444444" stroke-width="0.8"/>
-<line x1="104" y1="109" x2="104" y2="180" stroke="#111111" stroke-width="1.0" marker-end="url(#arrow)"/>
-<line x1="116" y1="181" x2="116" y2="110" stroke="#111111" stroke-width="1.0" marker-end="url(#arrow)"/>
-<text font-family="'Times New Roman', Times, serif" x="96" y="149.0" font-size="11" fill="#666666" text-anchor="end" font-style="italic" font-weight="normal">change of team</text>
-<line x1="134" y1="78" x2="325" y2="78" stroke="#111111" stroke-width="1.0" marker-end="url(#arrow)"/>
-<line x1="326" y1="92" x2="135" y2="92" stroke="#111111" stroke-width="1.0" stroke-dasharray="4 3" marker-end="url(#arrow)"/>
-<line x1="134" y1="212" x2="325" y2="212" stroke="#111111" stroke-width="1.0" marker-end="url(#arrow)"/>
-<line x1="326" y1="198" x2="135" y2="198" stroke="#111111" stroke-width="1.0" stroke-dasharray="4 3" marker-end="url(#arrow)"/>
-<text font-family="'Times New Roman', Times, serif" x="230.0" y="71" font-size="11" fill="#666666" text-anchor="middle" font-style="italic" font-weight="normal">stoppage</text>
-<text font-family="'Times New Roman', Times, serif" x="230.0" y="227" font-size="11" fill="#666666" text-anchor="middle" font-style="italic" font-weight="normal">stoppage</text>
-<line x1="330" y1="101" x2="133" y2="187" stroke="#111111" stroke-width="1.0" marker-end="url(#arrow)"/>
-<line x1="330" y1="189" x2="133" y2="103" stroke="#111111" stroke-width="1.0" marker-end="url(#arrow)"/>
-<rect x="260.0" y="136.0" width="62" height="16" rx="0" fill="#ffffff" stroke="none" stroke-width="0"/>
-<text font-family="'Times New Roman', Times, serif" x="291.0" y="148.0" font-size="11" fill="#666666" text-anchor="middle" font-style="italic" font-weight="normal">restart</text>
-<circle cx="110.0" cy="85.0" r="22" fill="#1f4e9c" stroke="none" stroke-width="0.0"/>
-<text font-family="'Times New Roman', Times, serif" x="110" y="89.5" font-size="13" fill="#ffffff" text-anchor="middle" font-style="normal" font-weight="bold">H</text>
-<circle cx="110.0" cy="205.0" r="22" fill="#d9651e" stroke="none" stroke-width="0.0"/>
-<text font-family="'Times New Roman', Times, serif" x="110" y="209.5" font-size="13" fill="#ffffff" text-anchor="middle" font-style="normal" font-weight="bold">A</text>
-<circle cx="350.0" cy="85.0" r="22" fill="#8a8f98" stroke="none" stroke-width="0.0"/>
-<text font-family="'Times New Roman', Times, serif" x="350" y="89.5" font-size="13" fill="#ffffff" text-anchor="middle" font-style="normal" font-weight="bold">D|H</text>
-<circle cx="350.0" cy="205.0" r="22" fill="#8a8f98" stroke="none" stroke-width="0.0"/>
-<text font-family="'Times New Roman', Times, serif" x="350" y="209.5" font-size="13" fill="#ffffff" text-anchor="middle" font-style="normal" font-weight="bold">D|A</text>
-<text font-family="'Times New Roman', Times, serif" x="350" y="54" font-size="11" fill="#666666" text-anchor="middle" font-style="normal" font-weight="normal">dead ball, home had it</text>
-<text font-family="'Times New Roman', Times, serif" x="350" y="243" font-size="11" fill="#666666" text-anchor="middle" font-style="normal" font-weight="normal">dead ball, away had it</text>
-<line x1="478" y1="52" x2="794" y2="52" stroke="#444444" stroke-width="1.0"/>
-<line x1="482" y1="64" x2="512" y2="64" stroke="#111111" stroke-width="1.0" marker-end="url(#arrow)"/>
-<text font-family="'Times New Roman', Times, serif" x="522" y="68" font-size="12.5" fill="#111111" text-anchor="start" font-style="normal" font-weight="normal">change of team</text>
-<text font-family="'Times New Roman', Times, serif" x="790" y="68" font-size="12.5" fill="#111111" text-anchor="end" font-style="normal" font-weight="normal">5</text>
-<line x1="482" y1="88" x2="512" y2="88" stroke="#111111" stroke-width="1.0" marker-end="url(#arrow)"/>
-<text font-family="'Times New Roman', Times, serif" x="522" y="92" font-size="12.5" fill="#111111" text-anchor="start" font-style="normal" font-weight="normal">stoppage</text>
-<text font-family="'Times New Roman', Times, serif" x="790" y="92" font-size="12.5" fill="#111111" text-anchor="end" font-style="normal" font-weight="normal">5</text>
-<line x1="482" y1="112" x2="512" y2="112" stroke="#111111" stroke-width="1.0" marker-end="url(#arrow)"/>
-<text font-family="'Times New Roman', Times, serif" x="522" y="116" font-size="12.5" fill="#111111" text-anchor="start" font-style="normal" font-weight="normal">restart by the other team</text>
-<text font-family="'Times New Roman', Times, serif" x="790" y="116" font-size="12.5" fill="#111111" text-anchor="end" font-style="normal" font-weight="normal">30</text>
-<line x1="482" y1="136" x2="512" y2="136" stroke="#111111" stroke-width="1.0" stroke-dasharray="4 3" marker-end="url(#arrow)"/>
-<text font-family="'Times New Roman', Times, serif" x="522" y="140" font-size="12.5" fill="#111111" text-anchor="start" font-style="normal" font-weight="normal">restart by the same team</text>
-<text font-family="'Times New Roman', Times, serif" x="790" y="140" font-size="12.5" fill="#111111" text-anchor="end" font-style="normal" font-weight="normal">31</text>
-<line x1="478" y1="150" x2="794" y2="150" stroke="#444444" stroke-width="1.0"/>
-<text font-family="'Times New Roman', Times, serif" x="478" y="170" font-size="11" fill="#666666" text-anchor="start" font-style="normal" font-weight="normal">Staying in a state is free.</text>
-<text font-family="'Times New Roman', Times, serif" x="478" y="186" font-size="11" fill="#666666" text-anchor="start" font-style="normal" font-weight="normal">A restart is cheaper while the players accelerate.</text>
-<text font-family="'Times New Roman', Times, serif" x="478" y="202" font-size="11" fill="#666666" text-anchor="start" font-style="normal" font-weight="normal">A change of team is cheaper where the model detects one.</text>
-<text font-family="'Times New Roman', Times, serif" x="478" y="218" font-size="11" fill="#666666" text-anchor="start" font-style="normal" font-weight="normal">Costs searched on held-out games, never on the provided match.</text>
+<rect x="0" y="0" width="830" height="284" fill="#ffffff"/>
+<text font-family="'Times New Roman', Times, serif" x="229.0" y="23" font-size="15.6" fill="#111111" text-anchor="middle" font-style="italic" font-weight="normal">(a) States and allowed moves</text>
+<path d="M18,41 L18,34 L440,34 L440,41" fill="none" stroke="#444444" stroke-width="0.9"/>
+<text font-family="'Times New Roman', Times, serif" x="641.0" y="23" font-size="15.6" fill="#111111" text-anchor="middle" font-style="italic" font-weight="normal">(b) Cost of each move</text>
+<path d="M470,41 L470,34 L812,34 L812,41" fill="none" stroke="#444444" stroke-width="0.9"/>
+<line x1="114" y1="122" x2="114" y2="193" stroke="#111111" stroke-width="1.1" marker-end="url(#arrow)"/>
+<line x1="126" y1="194" x2="126" y2="123" stroke="#111111" stroke-width="1.1" marker-end="url(#arrow)"/>
+<text font-family="'Times New Roman', Times, serif" x="106" y="162.0" font-size="13.2" fill="#555555" text-anchor="end" font-style="italic" font-weight="normal">change of team</text>
+<line x1="146" y1="88" x2="323" y2="88" stroke="#111111" stroke-width="1.1" marker-end="url(#arrow)"/>
+<line x1="324" y1="104" x2="147" y2="104" stroke="#111111" stroke-width="1.1" stroke-dasharray="4 3" marker-end="url(#arrow)"/>
+<line x1="146" y1="228" x2="323" y2="228" stroke="#111111" stroke-width="1.1" marker-end="url(#arrow)"/>
+<line x1="324" y1="212" x2="147" y2="212" stroke="#111111" stroke-width="1.1" stroke-dasharray="4 3" marker-end="url(#arrow)"/>
+<text font-family="'Times New Roman', Times, serif" x="235.0" y="81" font-size="13.2" fill="#555555" text-anchor="middle" font-style="italic" font-weight="normal">stoppage</text>
+<text font-family="'Times New Roman', Times, serif" x="235.0" y="245" font-size="13.2" fill="#555555" text-anchor="middle" font-style="italic" font-weight="normal">stoppage</text>
+<line x1="328" y1="114" x2="145" y2="200" stroke="#111111" stroke-width="1.1" marker-end="url(#arrow)"/>
+<line x1="328" y1="202" x2="145" y2="116" stroke="#111111" stroke-width="1.1" marker-end="url(#arrow)"/>
+<rect x="265.0" y="148.0" width="70" height="18" rx="0" fill="#ffffff" stroke="none" stroke-width="0"/>
+<text font-family="'Times New Roman', Times, serif" x="300.0" y="161.0" font-size="13.2" fill="#555555" text-anchor="middle" font-style="italic" font-weight="normal">restart</text>
+<circle cx="120.0" cy="96.0" r="24" fill="#1f4e9c" stroke="none" stroke-width="0.0"/>
+<text font-family="'Times New Roman', Times, serif" x="120" y="100.5" font-size="15.6" fill="#ffffff" text-anchor="middle" font-style="normal" font-weight="bold">H</text>
+<circle cx="120.0" cy="220.0" r="24" fill="#d9651e" stroke="none" stroke-width="0.0"/>
+<text font-family="'Times New Roman', Times, serif" x="120" y="224.5" font-size="15.6" fill="#ffffff" text-anchor="middle" font-style="normal" font-weight="bold">A</text>
+<circle cx="350.0" cy="96.0" r="24" fill="#8a8f98" stroke="none" stroke-width="0.0"/>
+<text font-family="'Times New Roman', Times, serif" x="350" y="100.5" font-size="15.6" fill="#ffffff" text-anchor="middle" font-style="normal" font-weight="bold">D|H</text>
+<circle cx="350.0" cy="220.0" r="24" fill="#8a8f98" stroke="none" stroke-width="0.0"/>
+<text font-family="'Times New Roman', Times, serif" x="350" y="224.5" font-size="15.6" fill="#ffffff" text-anchor="middle" font-style="normal" font-weight="bold">D|A</text>
+<text font-family="'Times New Roman', Times, serif" x="350" y="62" font-size="13.2" fill="#555555" text-anchor="middle" font-style="normal" font-weight="normal">dead ball, home had it</text>
+<text font-family="'Times New Roman', Times, serif" x="350" y="263" font-size="13.2" fill="#555555" text-anchor="middle" font-style="normal" font-weight="normal">dead ball, away had it</text>
+<line x1="478" y1="56" x2="804" y2="56" stroke="#444444" stroke-width="1.0"/>
+<line x1="482" y1="72" x2="512" y2="72" stroke="#111111" stroke-width="1.1" marker-end="url(#arrow)"/>
+<text font-family="'Times New Roman', Times, serif" x="522" y="76" font-size="15.0" fill="#111111" text-anchor="start" font-style="normal" font-weight="normal">change of team</text>
+<text font-family="'Times New Roman', Times, serif" x="800" y="76" font-size="15.0" fill="#111111" text-anchor="end" font-style="normal" font-weight="normal">5</text>
+<line x1="482" y1="100" x2="512" y2="100" stroke="#111111" stroke-width="1.1" marker-end="url(#arrow)"/>
+<text font-family="'Times New Roman', Times, serif" x="522" y="104" font-size="15.0" fill="#111111" text-anchor="start" font-style="normal" font-weight="normal">stoppage</text>
+<text font-family="'Times New Roman', Times, serif" x="800" y="104" font-size="15.0" fill="#111111" text-anchor="end" font-style="normal" font-weight="normal">5</text>
+<line x1="482" y1="128" x2="512" y2="128" stroke="#111111" stroke-width="1.1" marker-end="url(#arrow)"/>
+<text font-family="'Times New Roman', Times, serif" x="522" y="132" font-size="15.0" fill="#111111" text-anchor="start" font-style="normal" font-weight="normal">restart by the other team</text>
+<text font-family="'Times New Roman', Times, serif" x="800" y="132" font-size="15.0" fill="#111111" text-anchor="end" font-style="normal" font-weight="normal">30</text>
+<line x1="482" y1="156" x2="512" y2="156" stroke="#111111" stroke-width="1.1" stroke-dasharray="4 3" marker-end="url(#arrow)"/>
+<text font-family="'Times New Roman', Times, serif" x="522" y="160" font-size="15.0" fill="#111111" text-anchor="start" font-style="normal" font-weight="normal">restart by the same team</text>
+<text font-family="'Times New Roman', Times, serif" x="800" y="160" font-size="15.0" fill="#111111" text-anchor="end" font-style="normal" font-weight="normal">31</text>
+<line x1="478" y1="172" x2="804" y2="172" stroke="#444444" stroke-width="1.0"/>
+<text font-family="'Times New Roman', Times, serif" x="478" y="196" font-size="13.2" fill="#555555" text-anchor="start" font-style="normal" font-weight="normal">Staying in a state is free.</text>
+<text font-family="'Times New Roman', Times, serif" x="478" y="215" font-size="13.2" fill="#555555" text-anchor="start" font-style="normal" font-weight="normal">A restart is cheaper while the players accelerate.</text>
+<text font-family="'Times New Roman', Times, serif" x="478" y="234" font-size="13.2" fill="#555555" text-anchor="start" font-style="normal" font-weight="normal">A change of team is cheaper where the model detects one.</text>
+<text font-family="'Times New Roman', Times, serif" x="478" y="253" font-size="13.2" fill="#555555" text-anchor="start" font-style="normal" font-weight="normal">Costs are searched on held-out games only.</text>
 </svg>
