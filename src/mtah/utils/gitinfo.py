@@ -44,7 +44,7 @@ def info() -> dict[str, Any]:
     commit = _git("rev-parse", "HEAD")
     if commit is None:
         return {"commit": None, "short": None, "branch": None, "dirty": None, "dirty_files": []}
-    # porcelain v1: "XY path" -- the leading space of " M path" is significant, never strip it.
+    # porcelain v1: "XY path"; the leading space of " M path" is significant, never strip it.
     status = _git("status", "--porcelain", "--untracked-files=no", strip=False) or ""
     dirty_files = [line[3:] for line in status.splitlines() if line.strip()]
     untracked = _git("ls-files", "--others", "--exclude-standard", "--", *CODE_PATHS) or ""

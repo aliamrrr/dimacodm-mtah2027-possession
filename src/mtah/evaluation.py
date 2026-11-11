@@ -79,7 +79,7 @@ def agreement(reference: Codes, other: Codes, spec: MatchSpec) -> dict[str, floa
     """How much two submissions agree on the graded frames, without any ground truth.
 
     `spell_f1` treats `reference` (abstentions filled, X outside the halves) as if it were the truth:
-    two solutions at 0.9 make the same possessions; at 0.3 they disagree on most of them -- which is
+    two solutions at 0.9 make the same possessions; at 0.3 they disagree on most of them, which is
     where watching the video pays off.
     """
     graded = spec.graded_mask()

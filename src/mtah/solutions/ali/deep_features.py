@@ -2,7 +2,7 @@
 
 numpy only: the submission never imports torch. Per frame:
 
-* one token per tracked slot (46 at most, anonymous) and one ball token, see TOKEN_FEATURES --
+* one token per tracked slot (46 at most, anonymous) and one ball token, see TOKEN_FEATURES:
   the network sees the set of players, not an ordering of them;
 * GLOBAL_FEATURES: collective speeds before / after the frame, ball beyond a line, players off the
   pitch, kick-off formation, how many players each team has tracked, and the antisymmetric team
@@ -61,7 +61,7 @@ GLOBAL_FEATURES = (
     "out_of_play_2s",
     "off_pitch_1s",  # players beyond a line, / 3
     "kickoff_formation",
-    "n_home",  # tracked players, / 11 -- swapped with n_away by swap_teams
+    "n_home",  # tracked players, / 11; swapped with n_away by swap_teams
     "n_away",
     "ball_known_1s",
     "near_0.5m",  # the 16 antisymmetric team features (negated by swap_teams)

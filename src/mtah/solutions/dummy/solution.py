@@ -1,9 +1,9 @@
-"""dummy -- the official baseline, re-implemented on the shared toolbox.
+"""dummy: the official baseline, re-implemented on the shared toolbox.
 
 Nearest tracked player to the ball gets the ball for his team; frames without a ball say D; then a
 centred majority vote over +/- `window` frames. With window=50 it reproduces the organisers'
 baseline_smooth50.csv byte for byte (checked by `mtah data check-loader` on the real data), which
-makes it the reference point every team solution is compared against: published floor spellF1
+makes it the reference point every solution is compared against: published floor spellF1
 0.2433 on the full match.
 """
 

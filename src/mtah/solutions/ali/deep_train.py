@@ -1,4 +1,4 @@
-"""Train the deep model on OTHER games -- 5 folds by game, out-of-fold predictions.
+"""Train the deep model on OTHER games: 5 folds by game, out-of-fold predictions.
 
 On a GPU machine (docs/TRAINING.md, train_gpu.sh):
 

@@ -1,4 +1,4 @@
-"""Runs, spells and abstention filling -- delegating to the official definitions where they exist."""
+"""Runs, spells and abstention filling, delegating to the official definitions where they exist."""
 
 from __future__ import annotations
 

@@ -16,7 +16,7 @@ HEADER = "frame,label\n"
 
 
 def write_submission(path: Path, codes: Codes) -> Path:
-    """Write `frame,label` with LF line endings -- the same bytes as the official baseline writer."""
+    """Write `frame,label` with LF line endings: the same bytes as the official baseline writer."""
     codes = check_codes(codes)
     letters = to_letters(codes)
     frames = np.arange(len(codes)).astype(str)

@@ -1,6 +1,6 @@
 """Score solutions on the benchmark of OTHER games (see bench.py) with the official metric.
 
-This is where versions are compared and parameters chosen -- legitimately, since the labels come
+This is where versions are compared and parameters chosen, legitimately, since the labels come
 from other matches. Never on the public 5 minutes of BAR-ATH (RULES.md).
 
     python -m mtah.solutions.ali.evaluate dummy ali               # every bundle under <cache>/bench

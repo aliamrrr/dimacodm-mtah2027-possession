@@ -1,11 +1,12 @@
-"""ali_deep -- the set-transformer + TCN model (trained on other games), blended with `ali`.
+"""ali_deep: the set-transformer + TCN model (trained on other games) and the Viterbi decoder.
 
 Registered only once trained weights exist (models/ali_deep/fold*.npz, written by deep_train on a
-GPU pod), so the rest of the repository works without them. Inference is numpy (deep_net): the
-submission needs no torch. Per frame, the deep model's (team, dead) log-odds -- averaged over the
-fold models (5 folds + fold 5, trained on all ten games), both label conventions and the
-team-swapped mirror -- are blended with the logistic ones of `ali` (`blend` = weight of the deep
-model), then decoded by the same 4-state Viterbi.
+GPU), so the rest of the repository works without them. Inference is numpy (deep_net): the
+submission needs no torch. Per frame, the deep model's (team, dead) log-odds are averaged over the
+fold models (5 folds + fold 5, trained on all ten games), the label conventions listed in
+`conventions` and the team-swapped mirror. They can be blended with the logistic ones of `ali`
+(`blend` = weight of the deep model; 1 in the submitted configuration, the deep model alone),
+then they are decoded by the same 4-state Viterbi as `ali`.
 Every parameter comes from out-of-fold predictions on other games (deep_tune).
 """
 

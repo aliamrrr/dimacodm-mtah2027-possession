@@ -75,7 +75,7 @@ def sha256(path: Path) -> str:
 def load_manifest() -> dict:
     if not MANIFEST.is_file():
         sys.exit(
-            "vendor/official/MANIFEST.json is missing -- run: python scripts/sync_official.py --update"
+            "vendor/official/MANIFEST.json is missing. Run: python scripts/sync_official.py --update"
         )
     with open(MANIFEST, encoding="utf-8") as handle:
         return json.load(handle)

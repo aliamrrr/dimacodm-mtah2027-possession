@@ -6,7 +6,7 @@ are allowed in any amount, provided the organisers can access them and the techn
 explains them. Metrica's three public sample games (https://github.com/metrica-sports/sample-data,
 "please acknowledge the source") come with human event data, so this module:
 
-1. downloads them (pinned commit, sha256 checked) -- nothing about BAR-ATH is involved;
+1. downloads them (pinned commit, sha256 checked); nothing about BAR-ATH is involved;
 2. derives frame-level H/A/D ground truth from the events, mechanically, the way the organisers
    derived theirs from corrected tracking (see `derive_labels`);
 3. degrades the clean player tracking towards the automatic ATD of the challenge: 46 track slots
@@ -25,7 +25,7 @@ homography exist for these games: a solution must not require them to be scored 
 Second source, closer still to how the challenge's ground truth is made: IDSSE (Bassek et al.,
 Scientific Data 2025, CC-BY 4.0, https://doi.org/10.6084/m9.figshare.28196177), seven Bundesliga
 matches whose DFL position data carry, on every frame, `BallStatus` (alive / dead) and
-`BallPossession` (home / away) from quality-controlled tracking -- the same mechanical derivation
+`BallPossession` (home / away) from quality-controlled tracking: the same mechanical derivation
 the organisers describe ("D where the corrected tracking marks the ball dead, otherwise the team the
 tracking names as owning it"). No label has to be derived from events there.
 
@@ -647,7 +647,7 @@ def derive_labels(game: ExternalGame) -> Codes:
     """Frame-level H/A/D (X outside the periods), mechanically from the human event data.
 
     Alive: the team of the latest possession event (pass, carry, recovery, shot, ball lost, ball
-    out, set piece) -- possession changes when the other team recovers the ball, and stays with
+    out, set piece): possession changes when the other team recovers the ball, and stays with
     the last team through loose balls and duels (CHALLENGE events change nothing on their own).
     Dead: from the stoppage that precedes a restart (ball out, goal, foul, offside, hand ball,
     card; failing that, the end of the last event) to the frame before the restart, and from the

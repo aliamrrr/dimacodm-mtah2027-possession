@@ -1,11 +1,12 @@
-"""Train the two models and choose the decoder parameters -- on OTHER games only.
+"""Train the two logistic models and choose the decoder parameters, on OTHER games only.
 
     python -m mtah.solutions.ali.bench          # once: the benchmark bundles
     python -m mtah.solutions.ali.train          # leave-one-game-out report + weights.json
     python -m mtah.solutions.ali.train --search # also search the decoder parameters (slow)
 
-Leave-one-game-out: the models are fitted on two games and scored on the third, so every number
-printed here is measured on a game the models never saw. weights.json is then fitted on all three.
+Leave-one-game-out: the models are fitted on every game but one and scored on that one, so every
+number printed here is measured on a game the models never saw. weights.json is then fitted on
+all of them.
 Deterministic from start to end (no randomness at all), hence reproducible by the organisers.
 """
 
@@ -114,7 +115,7 @@ def cross_validate(games: list[GameData], params: dict[str, Any]) -> list[dict[s
 
 def balanced_mean(scores: list[tuple[str, float]]) -> float:
     """Mean of the per-source means: Metrica (labels from events) and DFL (labels from the
-    tracking) count equally, whatever their number of games -- we do not know which convention
+    tracking) count equally, whatever their number of games: we do not know which convention
     is closer to BAR-ATH's ground truth, so the parameters must hold for both."""
     groups: dict[str, list[float]] = {}
     for name, value in scores:

@@ -13,7 +13,7 @@
 Rules the pipeline enforces on every run (and the tests on the synthetic match):
   * len(output) == match.spec.n_frames, dtype integer, values in 0..3;
   * the same inputs + config + seed give the same bytes (rule 3 of the challenge);
-  * inputs are read-only -- copy before modifying.
+  * inputs are read-only: copy before modifying.
 """
 
 from __future__ import annotations

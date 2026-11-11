@@ -9,7 +9,7 @@ Everything is loaded lazily, so a solution only pays for the assets it actually 
     match.broadcast_tracking    Tracking | None, broadcast ATD (NOT aligned to tactical)
     match.broadcast_homography  Homography | None
     match.video_path(source)    Path to the mp4 (may not exist)
-    match.public_gt()           int8 codes of the 5 public minutes (X elsewhere) -- for checking
+    match.public_gt()           int8 codes of the 5 public minutes (X elsewhere), for checking
                                 that the pipeline is correct ONLY: the rules forbid training,
                                 tuning or choosing between versions on it. Never the private one.
 

@@ -11,7 +11,7 @@ NOBODY = -1
 
 
 def majority_vote(team: npt.NDArray[np.integer], window: int) -> Codes:
-    """Centred majority vote over +/- `window` frames -- exactly the official baseline's `smooth`.
+    """Centred majority vote over +/- `window` frames: exactly the official baseline's `smooth`.
 
     `team` holds H (0), A (1) or NOBODY (-1) per frame. Output: H/A where any vote exists in the
     window (ties -> H), D where the window has no vote at all. window=0 means no smoothing.

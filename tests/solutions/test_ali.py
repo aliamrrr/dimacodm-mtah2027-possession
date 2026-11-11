@@ -158,7 +158,7 @@ def test_skillcorner_parser_resamples_and_labels(tmp_path):
     (a1, b1), (a2, b2) = spans
     assert b1 - a1 + 1 == int(29 * 2.5) + 1 and a2 - b1 - 1 == bench.HALF_GAP
     first = labels[a1 : b1 + 1]
-    at = lambda f: first[round(f * 2.5)]  # noqa: E731 -- 10 fps frame -> 25 fps row
+    at = lambda f: first[round(f * 2.5)]  # noqa: E731 (10 fps frame -> 25 fps row)
     assert at(5) == H and at(11) == H  # the short gap keeps the team
     assert at(22) == D and at(27) == A
     assert (labels[a2 : b2 + 1] == A).all() and (labels[b1 + 1 : a2] == X).all()

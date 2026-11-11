@@ -534,7 +534,7 @@ def generate(out_dir: Path | str, seed: int = 0, mini: bool = False) -> dict[str
         "spec": spec.to_dict(),
         "kickoffs": kickoffs,
         "stats": stats,
-        "warning": "SYNTHETIC DATA -- not the real match. Scores here are smoke tests only.",
+        "warning": "SYNTHETIC DATA, not the real match. Scores here are smoke tests only.",
     }
     with open(synthetic / "meta.json", "w", encoding="utf-8", newline="\n") as handle:
         json.dump(meta, handle, indent=2)

@@ -1,4 +1,4 @@
-"""ali -- control-based possession with a dead-ball detector and a 4-state decoder.
+"""ali: control-based possession with a dead-ball detector and a 4-state decoder.
 
 Per frame, two pieces of evidence, both from positions only:
 
@@ -7,14 +7,14 @@ Per frame, two pieces of evidence, both from positions only:
   unseen: possession then simply carries on, as the rules say);
 * is the ball dead: a logistic model of how fast the players move (relative to this match's own
   level, and before / after the frame), the ball seen beyond a line, players off the pitch, the
-  kick-off formation, a motionless ball, long dropouts.
+  kick-off formation.
 
 A Viterbi decoder over H, A, D-after-H, D-after-A turns that into possessions: changing team
 costs `switch_cost`, a stoppage `stop_cost` (cheaper while the players slow down), a restart
 `restart_cost` (cheaper while they speed up, dearer by `same_team_restart_cost` when the team
-that had the ball restarts). Both models were trained on other games only (Metrica's public sample
-games, see bench.py / train.py) and every parameter here was chosen on them -- never on BAR-ATH,
-whose public 5 minutes only serve to check the pipeline.
+that had the ball restarts). Both models were trained on other games only (the benchmark games,
+see bench.py / train.py) and every parameter here was chosen on them, never on BAR-ATH, whose
+public 5 minutes only serve to check the pipeline.
 """
 
 from __future__ import annotations
@@ -67,8 +67,8 @@ def decode_logits(
     team_change: probability per frame that the team changes (ali_seg): changing team costs up to
     `boundary_gain` less there, never below zero.
 
-    `min_spell_s` (0 = off): after decoding, a touch without control -- a team spell shorter than
-    this, between the other team and either that team again or a stoppage -- does not change
+    `min_spell_s` (0 = off): after decoding, a touch without control (a team spell shorter than
+    this, between the other team and either that team again or a stoppage) does not change
     possession (model.controlled_possession, the written rule of CHALLENGE.md).
 
     Every decoder input is rounded to 1e-4 first. Rule 3 wants the organisers to regenerate the
