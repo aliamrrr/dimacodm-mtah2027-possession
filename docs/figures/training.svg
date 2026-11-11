@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 400" width="940" height="400" role="img" aria-label="Where the training data comes from and what the provided match is used for">
+<title>Where the training data comes from and what the provided match is used for</title>
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#52606d"/></marker>
+</defs>
+<rect x="0" y="0" width="940" height="400" fill="#ffffff"/>
+<text font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" fill="#52606d" text-anchor="start" dominant-baseline="middle"><tspan x="20" y="20.0">Public data about other games</tspan></text>
+<rect x="20" y="40" width="210" height="62" rx="8" fill="#f5f7fa" stroke="#9aa5b1" stroke-width="1.5"/>
+<text font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#1f2933" text-anchor="middle" dominant-baseline="middle"><tspan x="125.0" y="60.5">Metrica Sports</tspan></text>
+<text font-family="Arial, Helvetica, sans-serif" font-size="11.5" font-weight="normal" fill="#52606d" text-anchor="middle" dominant-baseline="middle"><tspan x="125.0" y="83.0">3 games, labels from events</tspan></text>
+<rect x="20" y="116" width="210" height="62" rx="8" fill="#f5f7fa" stroke="#9aa5b1" stroke-width="1.5"/>
+<text font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#1f2933" text-anchor="middle" dominant-baseline="middle"><tspan x="125.0" y="136.5">IDSSE / DFL</tspan></text>
+<text font-family="Arial, Helvetica, sans-serif" font-size="11.5" font-weight="normal" fill="#52606d" text-anchor="middle" dominant-baseline="middle"><tspan x="125.0" y="159.0">7 games, labels on every frame</tspan></text>
+<rect x="20" y="192" width="210" height="62" rx="8" fill="#f5f7fa" stroke="#9aa5b1" stroke-width="1.5"/>
+<text font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#1f2933" text-anchor="middle" dominant-baseline="middle"><tspan x="125.0" y="212.5">SkillCorner</tspan></text>
+<text font-family="Arial, Helvetica, sans-serif" font-size="11.5" font-weight="normal" fill="#52606d" text-anchor="middle" dominant-baseline="middle"><tspan x="125.0" y="235.0">20 games, training only</tspan></text>
+<rect x="280" y="86" width="200" height="122" rx="8" fill="#fdf1d8" stroke="#b7791f" stroke-width="1.5"/>
+<text font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#1f2933" text-anchor="middle" dominant-baseline="middle"><tspan x="380.0" y="114.0">Degrade the tracking</tspan></text>
+<text font-family="Arial, Helvetica, sans-serif" font-size="11.5" font-weight="normal" fill="#52606d" text-anchor="middle" dominant-baseline="middle"><tspan x="380.0" y="136.5">anonymous track slots</tspan><tspan x="380.0" y="151.5">gaps and identity swaps</tspan><tspan x="380.0" y="166.5">ball lost for up to 30 s</tspan><tspan x="380.0" y="181.5">ball moving while dead</tspan></text>
+<line x1="233" y1="71.0" x2="275" y2="120.4" stroke="#52606d" stroke-width="1.6" marker-end="url(#arrow)"/>
+<line x1="233" y1="147.0" x2="275" y2="147.0" stroke="#52606d" stroke-width="1.6" marker-end="url(#arrow)"/>
+<line x1="233" y1="223.0" x2="275" y2="173.6" stroke="#52606d" stroke-width="1.6" marker-end="url(#arrow)"/>
+<rect x="530" y="86" width="190" height="122" rx="8" fill="#e1ecfb" stroke="#3b6fb6" stroke-width="1.5"/>
+<text font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#1f2933" text-anchor="middle" dominant-baseline="middle"><tspan x="625.0" y="106.5">Train 6 models</tspan></text>
+<text font-family="Arial, Helvetica, sans-serif" font-size="11.5" font-weight="normal" fill="#52606d" text-anchor="middle" dominant-baseline="middle"><tspan x="625.0" y="129.0">5 folds by game</tspan><tspan x="625.0" y="144.0">+ 1 model on all games</tspan><tspan x="625.0" y="159.0">each benchmark game is</tspan><tspan x="625.0" y="174.0">scored by a model that</tspan><tspan x="625.0" y="189.0">never saw it</tspan></text>
+<line x1="483" y1="147" x2="525" y2="147" stroke="#52606d" stroke-width="1.6" marker-end="url(#arrow)"/>
+<rect x="770" y="56" width="150" height="70" rx="8" fill="#e3f5e8" stroke="#2f855a" stroke-width="1.5"/>
+<text font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#1f2933" text-anchor="middle" dominant-baseline="middle"><tspan x="845.0" y="73.0">Weights</tspan></text>
+<text font-family="Arial, Helvetica, sans-serif" font-size="11.5" font-weight="normal" fill="#52606d" text-anchor="middle" dominant-baseline="middle"><tspan x="845.0" y="95.5">models/dimacodm</tspan><tspan x="845.0" y="110.5">pinned by sha256</tspan></text>
+<rect x="770" y="168" width="150" height="70" rx="8" fill="#e3f5e8" stroke="#2f855a" stroke-width="1.5"/>
+<text font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#1f2933" text-anchor="middle" dominant-baseline="middle"><tspan x="845.0" y="185.0">Decoder settings</tspan></text>
+<text font-family="Arial, Helvetica, sans-serif" font-size="11.5" font-weight="normal" fill="#52606d" text-anchor="middle" dominant-baseline="middle"><tspan x="845.0" y="207.5">searched on held-out</tspan><tspan x="845.0" y="222.5">predictions</tspan></text>
+<line x1="723" y1="130" x2="765" y2="96" stroke="#52606d" stroke-width="1.6" marker-end="url(#arrow)"/>
+<line x1="723" y1="164" x2="765" y2="200" stroke="#52606d" stroke-width="1.6" marker-end="url(#arrow)"/>
+<text font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" fill="#52606d" text-anchor="start" dominant-baseline="middle"><tspan x="20" y="282.0">The provided match</tspan></text>
+<rect x="20" y="300" width="480" height="76" rx="8" fill="#fde8e8" stroke="#c53030" stroke-width="1.5" stroke-dasharray="6 4"/>
+<text font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#1f2933" text-anchor="middle" dominant-baseline="middle"><tspan x="260.0" y="320.0">FC Barcelona vs Athletic Club</tspan></text>
+<text font-family="Arial, Helvetica, sans-serif" font-size="11.5" font-weight="normal" fill="#52606d" text-anchor="middle" dominant-baseline="middle"><tspan x="260.0" y="342.5">never used to train a model or to choose a setting</tspan><tspan x="260.0" y="357.5">its tracking was only described, without labels, to set the degradation</tspan></text>
+<rect x="580" y="300" width="340" height="76" rx="8" fill="#f5f7fa" stroke="#9aa5b1" stroke-width="1.5"/>
+<text font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#1f2933" text-anchor="middle" dominant-baseline="middle"><tspan x="750.0" y="320.0">Prediction and checks</tspan></text>
+<text font-family="Arial, Helvetica, sans-serif" font-size="11.5" font-weight="normal" fill="#52606d" text-anchor="middle" dominant-baseline="middle"><tspan x="750.0" y="342.5">the trained system is applied to the match</tspan><tspan x="750.0" y="357.5">public 5 minutes: checks only</tspan></text>
+<line x1="503" y1="338" x2="575" y2="338" stroke="#52606d" stroke-width="1.6" marker-end="url(#arrow)"/>
+<path d="M845.0,241 L845.0,295" fill="none" stroke="#52606d" stroke-width="1.6" marker-end="url(#arrow)"/>
+<path d="M400,296 L400,250 L380.0,250 L380.0,213" fill="none" stroke="#52606d" stroke-width="1.6" marker-end="url(#arrow)"/>
+<text font-family="Arial, Helvetica, sans-serif" font-size="11.5" font-weight="normal" fill="#52606d" text-anchor="start" dominant-baseline="middle"><tspan x="408" y="268.0">label-free description</tspan></text>
+</svg>

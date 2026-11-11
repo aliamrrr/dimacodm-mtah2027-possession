@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 330" width="980" height="330" role="img" aria-label="From the tracking of the match to the possession file">
+<title>From the tracking of the match to the possession file</title>
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#52606d"/></marker>
+</defs>
+<rect x="0" y="0" width="980" height="330" fill="#ffffff"/>
+<text font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" fill="#52606d" text-anchor="start" dominant-baseline="middle"><tspan x="20" y="22.0">For every frame</tspan></text>
+<rect x="20" y="44" width="205" height="96" rx="8" fill="#f5f7fa" stroke="#9aa5b1" stroke-width="1.5"/>
+<text font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#1f2933" text-anchor="middle" dominant-baseline="middle"><tspan x="122.5" y="66.5">Tracking of the match</tspan></text>
+<text font-family="Arial, Helvetica, sans-serif" font-size="11.5" font-weight="normal" fill="#52606d" text-anchor="middle" dominant-baseline="middle"><tspan x="122.5" y="89.0">players and ball positions</tspan><tspan x="122.5" y="104.0">25 frames per second</tspan><tspan x="122.5" y="119.0">ball often missing</tspan></text>
+<rect x="265" y="44" width="205" height="96" rx="8" fill="#f5f7fa" stroke="#9aa5b1" stroke-width="1.5"/>
+<text font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#1f2933" text-anchor="middle" dominant-baseline="middle"><tspan x="367.5" y="66.5">Frame description</tspan></text>
+<text font-family="Arial, Helvetica, sans-serif" font-size="11.5" font-weight="normal" fill="#52606d" text-anchor="middle" dominant-baseline="middle"><tspan x="367.5" y="89.0">one token per tracked player</tspan><tspan x="367.5" y="104.0">one token for the ball</tspan><tspan x="367.5" y="119.0">30 global features</tspan></text>
+<rect x="510" y="44" width="205" height="96" rx="8" fill="#e1ecfb" stroke="#3b6fb6" stroke-width="1.5"/>
+<text font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#1f2933" text-anchor="middle" dominant-baseline="middle"><tspan x="612.5" y="66.5">Set transformer</tspan></text>
+<text font-family="Arial, Helvetica, sans-serif" font-size="11.5" font-weight="normal" fill="#52606d" text-anchor="middle" dominant-baseline="middle"><tspan x="612.5" y="89.0">2 attention layers</tspan><tspan x="612.5" y="104.0">looks at all players at once</tspan><tspan x="612.5" y="119.0">any number, any order</tspan></text>
+<rect x="755" y="44" width="205" height="96" rx="8" fill="#e1ecfb" stroke="#3b6fb6" stroke-width="1.5"/>
+<text font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#1f2933" text-anchor="middle" dominant-baseline="middle"><tspan x="857.5" y="66.5">Temporal convolution</tspan></text>
+<text font-family="Arial, Helvetica, sans-serif" font-size="11.5" font-weight="normal" fill="#52606d" text-anchor="middle" dominant-baseline="middle"><tspan x="857.5" y="89.0">9 dilated blocks</tspan><tspan x="857.5" y="104.0">20 s of context</tspan><tspan x="857.5" y="119.0">before and after the frame</tspan></text>
+<line x1="228" y1="92.0" x2="261" y2="92.0" stroke="#52606d" stroke-width="1.6" marker-end="url(#arrow)"/>
+<line x1="473" y1="92.0" x2="506" y2="92.0" stroke="#52606d" stroke-width="1.6" marker-end="url(#arrow)"/>
+<line x1="718" y1="92.0" x2="751" y2="92.0" stroke="#52606d" stroke-width="1.6" marker-end="url(#arrow)"/>
+<path d="M857.5,143 L857.5,199" fill="none" stroke="#52606d" stroke-width="1.6" marker-end="url(#arrow)"/>
+<text font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" fill="#52606d" text-anchor="start" dominant-baseline="middle"><tspan x="20" y="182.0">For the whole match</tspan></text>
+<rect x="755" y="204" width="205" height="96" rx="8" fill="#e1ecfb" stroke="#3b6fb6" stroke-width="1.5"/>
+<text font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#1f2933" text-anchor="middle" dominant-baseline="middle"><tspan x="857.5" y="226.5">Ensemble</tspan></text>
+<text font-family="Arial, Helvetica, sans-serif" font-size="11.5" font-weight="normal" fill="#52606d" text-anchor="middle" dominant-baseline="middle"><tspan x="857.5" y="249.0">6 models, each run twice</tspan><tspan x="857.5" y="264.0">(teams as is, teams swapped)</tspan><tspan x="857.5" y="279.0">scores are averaged</tspan></text>
+<rect x="510" y="204" width="205" height="96" rx="8" fill="#fdf1d8" stroke="#b7791f" stroke-width="1.5"/>
+<text font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#1f2933" text-anchor="middle" dominant-baseline="middle"><tspan x="612.5" y="226.5">Viterbi decoder</tspan></text>
+<text font-family="Arial, Helvetica, sans-serif" font-size="11.5" font-weight="normal" fill="#52606d" text-anchor="middle" dominant-baseline="middle"><tspan x="612.5" y="249.0">4 states, one half at a time</tspan><tspan x="612.5" y="264.0">turns noisy scores into</tspan><tspan x="612.5" y="279.0">clean possessions</tspan></text>
+<rect x="265" y="204" width="205" height="96" rx="8" fill="#e3f5e8" stroke="#2f855a" stroke-width="1.5"/>
+<text font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#1f2933" text-anchor="middle" dominant-baseline="middle"><tspan x="367.5" y="226.5">DIMACodm.csv</tspan></text>
+<text font-family="Arial, Helvetica, sans-serif" font-size="11.5" font-weight="normal" fill="#52606d" text-anchor="middle" dominant-baseline="middle"><tspan x="367.5" y="249.0">one label per frame</tspan><tspan x="367.5" y="264.0">H, A, D or X</tspan><tspan x="367.5" y="279.0">199,319 rows</tspan></text>
+<line x1="752" y1="252.0" x2="719" y2="252.0" stroke="#52606d" stroke-width="1.6" marker-end="url(#arrow)"/>
+<line x1="507" y1="252.0" x2="474" y2="252.0" stroke="#52606d" stroke-width="1.6" marker-end="url(#arrow)"/>
+<text font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" fill="#52606d" text-anchor="middle" dominant-baseline="middle"><tspan x="122.5" y="235.0">numpy only, no GPU</tspan><tspan x="122.5" y="252.0">about 15 minutes</tspan><tspan x="122.5" y="269.0">same bytes on any machine</tspan></text>
+</svg>

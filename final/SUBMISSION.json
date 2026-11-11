@@ -1,0 +1,120 @@
+{
+  "team": "DIMACodm",
+  "solution": "dimacodm",
+  "file": "DIMACodm.csv",
+  "sha256": "8ea14d29495027575fef62587512a16509081cf5c5b52143b23ba04a3db1462a",
+  "rows": 199319,
+  "created_utc": "2026-11-11T14:21:59+00:00",
+  "git": {
+    "commit": "44b8aa100b0b8baf599177532845a919fff8e0ca",
+    "branch": "main",
+    "dirty": false,
+    "remote": "https://github.com/aliamrrr/dimacodm-mtah2027-possession.git"
+  },
+  "config": {
+    "solution": "dimacodm",
+    "seed": 0,
+    "params": {
+      "ball_gap_frames": 25,
+      "team_scale": 0.3,
+      "dead_scale": 0.35,
+      "dead_bias": -2.5,
+      "switch_cost": 5.0,
+      "stop_cost": 5.0,
+      "restart_cost": 30.0,
+      "same_team_restart_cost": 1.0,
+      "stop_trend_bonus": 0.0,
+      "start_trend_bonus": 10.0,
+      "blend": 1.0,
+      "boundary_gain": 4.0,
+      "min_spell_s": 0.0,
+      "conventions": [
+        1
+      ],
+      "models": "models/dimacodm"
+    }
+  },
+  "config_sha256": "34c2a09a73068d6ae32ab430935bc7559ba5019f272595e5442e4461a885d248",
+  "data_fingerprint": {
+    "root": "data",
+    "synthetic": false,
+    "tactical:atd_meta": {
+      "bytes": 59057,
+      "sha256": "327e35e32e46a647389b88f883d4f9a2ab931e3e6148aef2fcf8f22b1e93c43a",
+      "partial": false
+    },
+    "tactical:atd_raw": {
+      "bytes": 195714285,
+      "sha256": "f130e350d2bfdf734b7e32f072931fccc6d015c1e837d082064875fe0a700431",
+      "partial": false
+    },
+    "tactical:homography": {
+      "bytes": 23187043,
+      "sha256": "421c81abe16f0912dc45c2541f9bf19dd5660066397a3dcc043038a1b61c28c3",
+      "partial": false
+    },
+    "tactical:smart_tagging": {
+      "bytes": 261055,
+      "sha256": "0594d35e3df01b9c5002372d8615e2e8ef5379ac8f4e84c5ef7a53f4304c9019",
+      "partial": false
+    }
+  },
+  "used_assets": [
+    "tactical:atd_meta",
+    "tactical:atd_raw"
+  ],
+  "environment": {
+    "python": "3.11.16",
+    "implementation": "CPython",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "machine": "AMD64",
+    "packages": {
+      "numpy": "2.4.6",
+      "pandas": "2.3.3",
+      "pyyaml": "6.0.3",
+      "mtah": "0.1.0"
+    },
+    "uv_lock_sha256": "a7075bac581c14ff3473c687abe4448ee2b9c476685f47d22e7df947496105b9"
+  },
+  "output": {
+    "path": "final/DIMACodm.csv",
+    "sha256": "8ea14d29495027575fef62587512a16509081cf5c5b52143b23ba04a3db1462a",
+    "rows": 199319,
+    "label_counts": {
+      "H": 51073,
+      "A": 33227,
+      "D": 74557,
+      "X": 40462
+    },
+    "label_counts_graded": {
+      "H": 51073,
+      "A": 33227,
+      "D": 74557,
+      "X": 0
+    },
+    "x_on_graded_frames": 0,
+    "n_possessions": 325,
+    "mean_possession_s": 10.375384615384615,
+    "short_possessions_lt_1s": 7
+  },
+  "scores": {
+    "public": {
+      "spell_f1": 0.7667,
+      "macro_f1": 0.9378,
+      "spell_ci": null,
+      "n_pred_spells": 19,
+      "n_gt_spells": 17,
+      "mean_spell_s": 12.79,
+      "gt_mean_spell_s": 14.19,
+      "alive_dead_f1": 0.988,
+      "team_acc_both_alive": 0.945,
+      "trans_f1_25": 0.7143,
+      "mean_latency": -4.0,
+      "x_on_graded": 0,
+      "n_graded": 7500
+    }
+  },
+  "determinism": "two runs (cache on / cache off) produced identical bytes",
+  "official_validator": "OK    DIMACodm.csv",
+  "reproduce": "mtah final dimacodm --team \"DIMACodm\"   # then compare sha256"
+}

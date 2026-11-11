@@ -2,22 +2,42 @@
 
 Submission of team **DIMACodm** to More than a Hack 2027, Phase 1 (Ball Possession).
 
+Team: Ali Anass Amradouch, Mehdi Berrada, Adnane El Yazid.
+
 Given the automatic tracking of FC Barcelona vs Athletic Club, the code writes one label per frame
-of the tactical video: `H` (home team in possession), `A` (away team), `D` (dead ball), `X`
-(outside the graded halves). The ranking metric is spellF1.
+of the tactical video:
 
-- Method, training data, possession rules and limitations: [docs/TECHNICAL_DOCUMENT.md](docs/TECHNICAL_DOCUMENT.md)
-- How the weights were trained: [docs/TRAINING.md](docs/TRAINING.md)
+| label | meaning |
+|---|---|
+| `H` | the home team has the ball |
+| `A` | the away team has the ball |
+| `D` | dead ball |
+| `X` | outside the graded halves |
 
-## The method in one paragraph
+The ranking metric is spellF1.
 
-A set transformer reads, for every frame, the tracked players and the ball as an unordered set of
-tokens; a dilated temporal convolution gives each frame 20 seconds of context on both sides; an
-ensemble of six such models outputs, per frame, the log-odds of "home vs away" and of "dead vs
-alive" and the probability of a change of team. A four-state Viterbi decoder turns these into
-possessions. The models are trained only on public data about OTHER games, whose clean tracking is
-degraded on the fly so that it looks like an automatic tracking. Inference is plain numpy in
-float64: no GPU is needed and the output is byte-identical from one machine to the next.
+## Where to find what
+
+| you want | go to |
+|---|---|
+| the method, the training data, the possession rules, the limitations | [docs/TECHNICAL_DOCUMENT.md](docs/TECHNICAL_DOCUMENT.md) |
+| to regenerate the submission file | [Regenerate the submission file](#regenerate-the-submission-file), below |
+| how the weights were trained | [docs/TRAINING.md](docs/TRAINING.md) |
+| the fingerprint of the submitted file | [final/SUBMISSION.json](final/SUBMISSION.json) |
+
+## The method in short
+
+![From the tracking of the match to the possession file](docs/figures/pipeline.svg)
+
+- **A set transformer** reads, for every frame, the tracked players and the ball as a set of
+  tokens: any number of players, in any order.
+- **A temporal convolution** gives each frame 20 seconds of context before and after.
+- **An ensemble of six models** scores every frame: home or away, dead or alive, change of team.
+- **A four-state Viterbi decoder** turns these scores into clean possessions.
+- **Training uses only public data about other games.** Their clean tracking is degraded on the
+  fly so that it looks like an automatic tracking.
+- **Inference is plain numpy in float64.** No GPU is needed and the output is byte-identical from
+  one machine to the next.
 
 ## Regenerate the submission file
 
@@ -93,8 +113,9 @@ src/mtah/
   synthetic/                 generator of a fake match in the official formats (tests)
 models/dimacodm/             the six trained models, pinned by sha256
 vendor/official/             exact copy of the organisers' scorer, validator and documentation
+scripts/make_figures.py      writes the figures of the documentation
 tests/
-docs/
+docs/                        technical document, training notes, figures
 ```
 
 ## Rules

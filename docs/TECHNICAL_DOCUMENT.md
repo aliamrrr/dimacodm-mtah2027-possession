@@ -1,94 +1,131 @@
-# Technical document
+# Frame-level ball possession: technical document
 
-Team DIMACodm. More than a Hack 2027, Phase 1: Ball Possession.
+More than a Hack 2027, Phase 1: Ball Possession.
+
+**Team DIMACodm**: Ali Anass Amradouch, Mehdi Berrada, Adnane El Yazid.
 
 Repository: https://github.com/aliamrrr/dimacodm-mtah2027-possession
 
+## Summary
+
+- **Task.** For every frame of the tactical video, say which team has the ball (`H` or `A`) or
+  that the ball is dead (`D`).
+- **Model.** A neural network reads the players and the ball in each frame, with 20 seconds of
+  context before and after. A small decoder then turns its per-frame scores into clean
+  possessions.
+- **Training data.** Public data about 30 other games. Nothing from the provided match.
+- **Result on other games.** spellF1 of 0.752 on ten games the models never saw.
+- **Reproduction.** One command, no GPU, about 15 minutes per run, the same file on any machine.
+
 ## 1. Approach
 
-**The question.** For every frame of the tactical video, say which team has the ball or that the
-ball is dead. The ranking metric, spellF1, matches whole possessions by temporal overlap, so what
-matters is where possessions start and stop, not how many frames are right.
+### What matters
 
-**The constraint that shaped everything.** The rules forbid training or tuning on the provided
-match. The system is therefore trained and selected on public data about other games, and the
-difficulty moves to a different place: making those other games look, to the model, like the
-automatic tracking of the provided match.
+The ranking metric, spellF1, matches whole possessions by how much they overlap in time. What
+counts is where each possession starts and stops, not how many frames are right.
 
-**The model.** Two questions per frame: which team controls the ball, and is the ball dead.
+The rules forbid training or tuning on the provided match. We therefore train and select
+everything on other games. The hard part becomes making those other games look like the automatic
+tracking of the provided match (section 3).
 
-1. *Per frame, a set transformer.* Each of the 46 anonymous track slots that is present, and the
-   ball, is a token: position, velocity, team, position and speed relative to the ball. Thirty
-   global features complete the frame: quantiles of the players' speeds before and after the
-   frame, ball beyond a line, players off the pitch, kick-off formation, players tracked per team.
-   Two masked self-attention layers (64 dimensions, 4 heads) see only the slots that are present.
-   The tokens are pooled per team (mean and max) and joined with the ball token.
-2. *Across time, a dilated convolution.* Nine residual blocks with dilations 1 to 256 give every
-   frame 511 frames (20 s) of context on each side.
-3. *Heads.* The state (H, A or D), the only one used to predict; and three auxiliary ones that
-   shape the representation: the ball position (which the model has to guess where the tracking
-   lost the ball), the player in possession (a pointer on the tokens), and the frames where the
-   team in possession changes.
-4. *Ensemble.* Six models (five folds by game, plus one trained on every game). Each runs twice,
-   as is and with the two teams exchanged, so the output is exactly symmetric between the teams.
-   Their log-odds are averaged.
-5. *Decoder.* A Viterbi decoder over four states (H, A, dead after H, dead after A) turns the
-   per-frame log-odds into possessions. Changing team, stopping and restarting each have a cost;
-   a restart is cheaper while the players accelerate, and a change of team is cheaper where the
-   model detects one. Each half is decoded on its own.
+### The pipeline
 
-**The loss follows the metric.** spellF1 counts each possession once, a per-frame loss counts it
-by its length. Each frame is therefore weighted by (duration of its possession) ^ -0.5, with a
-floor at 0.5 s, so short possessions are not drowned by long ones.
+![From the tracking of the match to the possession file](figures/pipeline.svg)
 
-**Inference** is numpy in float64 (`deep_net.py`); the decoder inputs are rounded to 1e-4. The
-same file comes out on any machine. It takes about 15 minutes on a 4-core laptop, without a GPU.
+1. **Frame description.** Each tracked player and the ball become one token: position, velocity,
+   team, and position and speed relative to the ball. Thirty global features complete the frame,
+   for example how fast the players move, whether the ball is beyond a line, and how many players
+   are off the pitch.
+2. **Set transformer, per frame.** Two attention layers (64 dimensions, 4 heads) look at all the
+   players at once. Track slots are anonymous and their number changes, so the model works on a
+   set: any number of players, in any order.
+3. **Temporal convolution, across time.** Nine dilated blocks give every frame 20 seconds of
+   context on each side. This is what lets the model follow a possession while the ball is lost.
+4. **Outputs.** The model answers two questions per frame: which team controls the ball, and is
+   the ball dead. Three extra outputs are used only during training to shape the model: the ball
+   position, the player in possession, and the frames where the team changes.
+5. **Ensemble.** Six models are averaged. Each one runs twice, once as is and once with the two
+   teams swapped, so the result treats both teams exactly the same way.
+6. **Decoder.** A Viterbi decoder turns the noisy per-frame scores into possessions.
 
-**Why this rather than something else.** A logistic model on hand-made distance features with the
-same decoder (`dimacodm_logistic`, kept in the repository as the reference) reaches 0.46 on our first benchmark
-against 0.75 for the deep model: possession depends on the configuration of all players and on
-what happens seconds before and after, which a set model with temporal context captures and
-per-frame distances do not.
+### The decoder
+
+![The four states of the decoder and the cost of each move](figures/decoder.svg)
+
+The decoder has four states. It remembers which team had the ball before a stoppage. Staying in a
+state is free and every move has a cost, so it only changes state when the evidence is strong and
+lasts. Two costs move with the play: a restart is cheaper while the players accelerate, and a
+change of team is cheaper where the model detects one. Each half is decoded on its own.
+
+### Two choices that follow from the metric
+
+- **Loss.** spellF1 counts each possession once, whatever its length. A plain per-frame loss would
+  let long possessions dominate. Each frame is therefore weighted by
+  (duration of its possession) ^ -0.5, with a floor at 0.5 s.
+- **Determinism.** Inference is plain numpy in float64 and the decoder inputs are rounded to 1e-4.
+  The same file comes out on any machine.
+
+### Why this rather than something simpler
+
+We first built a logistic model on hand-made distance features with the same decoder. It is kept
+in the repository as `dimacodm_logistic`. It reaches 0.46 on our first benchmark, against 0.75 for
+the deep model. Possession depends on where all the players are and on what happens seconds
+before and after. Per-frame distances to the ball do not capture that.
 
 ## 2. Assets used
 
 | asset | used | how, or why not |
 |---|---|---|
 | tactical tracking (ATD) | yes | positions of the players and of the ball, team of each slot |
-| ATD speed column, third ball field | no | everything is recomputed from positions, so that the same code runs on the other games |
+| ATD speed column, third ball field | no | everything is recomputed from positions, so the same code runs on the other games |
 | Smart Tagging | no | it has no equivalent on the other games, so its use could not be validated |
 | homography | no | not needed to decide possession |
-| tactical video | no | |
+| tactical video | no | the tracking was enough for this approach |
 | broadcast video and tracking | no | not synchronised with the tactical video |
 | public ground truth (5 minutes) | checks only | see section 5 |
 
 ## 3. Training data
 
-None of it comes from the provided match. We labelled nothing by hand; all labels come from the
+None of it comes from the provided match. We labelled nothing by hand. All labels come from the
 publishers of the data.
+
+![Where the training data comes from and what the provided match is used for](figures/training.svg)
 
 | source | games | tracking | labels, and who made them |
 |---|---|---|---|
-| Metrica Sports sample data (github.com/metrica-sports/sample-data, commit `e706dd5`) | 3 | 25 fps | event data annotated by Metrica; per-frame H / A / D derived mechanically from the events (`bench.derive_labels`) |
+| Metrica Sports sample data (github.com/metrica-sports/sample-data, commit `e706dd5`) | 3 | 25 fps | events annotated by Metrica. Per-frame H / A / D derived mechanically from the events (`bench.derive_labels`) |
 | IDSSE / DFL (Bassek et al., Scientific Data 2025, CC-BY 4.0, doi 10.6084/m9.figshare.28196177) | 7 | 25 fps | `BallStatus` and `BallPossession` on every frame, from the DFL's quality-controlled tracking. This is how the challenge describes its own ground truth |
-| SkillCorner open data (github.com/SkillCorner/opendata, MIT, commit `4340d27`) | 20 | 10 fps, resampled to 25 | team in possession per phase of play, by SkillCorner. Training only; its stoppage frames are never a target |
+| SkillCorner open data (github.com/SkillCorner/opendata, MIT, commit `4340d27`) | 20 | 10 fps, resampled to 25 | team in possession per phase of play, by SkillCorner. Training only. Its stoppage frames are never a target |
 
-Every file is downloaded by the code and checked against a pinned hash. The ten Metrica and DFL
-games are also the benchmark: each one is only ever scored by a model that did not see it (five
-folds by game). Each source keeps its own label convention through a learned embedding; the DFL
-one is used to predict, because CHALLENGE.md describes the ground truth as built the same way.
+Every file is downloaded by the code and checked against a pinned hash.
 
-**Making clean tracking look automatic.** These games come with clean tracking. Every training
-window is degraded with magnitudes drawn at random: anonymous slots that follow a player for 8 s
-to 200 s, gaps, identity changes, duplicates, position noise from none to 40 cm, episodes where a
-large part of the players is not tracked, a ball missing 25 % to 55 % of the time in runs of 0.6 s
-to 30 s, and a ball that keeps moving during stoppages (`deep_data.py`).
+**Benchmark.** The ten Metrica and DFL games are also our benchmark. Each one is only ever scored
+by a model that did not see it (five folds by game).
 
-The ranges were set from a label-free description of the provided match's tracking, in coarse bins
-only (how smooth positions are, how long the ball stays visible or missing, how long a slot
-follows a player, how many objects are tracked, whether a visible ball is ever still). RULES.md
-allows inspecting the data to design features. No label, frame or value of the match is used, and
-no model is fitted on it. It showed that our first simulation was in the wrong regime:
+**Label conventions.** Each source labels possession in its own way. The model learns one
+embedding per source. We predict with the DFL one, because CHALLENGE.md describes the ground truth
+as built the same way.
+
+### Making clean tracking look automatic
+
+The other games come with clean tracking. The provided match comes with automatic tracking: slots
+are anonymous, the ball is often lost. A model trained on clean tracking would fail on it. So
+every training window is degraded at random:
+
+- anonymous slots that follow a player for 8 s to 200 s, with gaps, identity changes and
+  duplicates;
+- position noise from none to 40 cm;
+- episodes where a large part of the players is not tracked;
+- a ball missing 25 % to 55 % of the time, in runs of 0.6 s to 30 s;
+- a ball that keeps moving during stoppages.
+
+The code is in `deep_data.py`.
+
+**How the ranges were set.** We described the tracking of the provided match without any label,
+in coarse bins only: how smooth positions are, how long the ball stays visible or missing, how
+long a slot follows a player, how many objects are tracked, whether a visible ball is ever still.
+RULES.md allows inspecting the data to design features. No label, frame or value of the match is
+used, and no model is fitted on it. This showed that our first simulation was in the wrong regime:
 
 | | first simulation | automatic tracking of the match |
 |---|---|---|
@@ -98,79 +135,82 @@ no model is fitted on it. It showed that our first simulation was in the wrong r
 | frames with fewer than 16 objects tracked | almost never | 5 to 15 % |
 | ball visible but still | over 30 % of the frames with a ball, in the source data | 5 to 15 % |
 
-The last line is the important one. In the source data a dead ball lies still or is hidden; in an
+The last line is the important one. In the source data a dead ball lies still or is hidden. In an
 automatic tracking it is visible and moving. A model trained on the former takes such stoppages
-for play. We reproduced this on the other games by making the ball of 70 % of the stoppages move
-(it glides to the restart spot, wanders, is carried, or is passed between players): the share of
-dead-ball frames found fell from 98 % to 72 %. Training with such stoppages restored it.
+for play. We reproduced the problem on the other games by making the ball move in 70 % of the
+stoppages (it glides to the restart spot, wanders, is carried, or is passed between players). The
+share of dead-ball frames found fell from 98 % to 72 %. Training with such stoppages restored it.
 
 ## 4. Possession rules implemented
 
-- **Three states, no abstention.** Every graded frame is H, A or D. `X` is written only outside
-  the two halves, whose limits come from the official `games.py`.
-- **Ball not tracked.** Possession carries on. The model infers the team from the players and
-  from the last and next sightings within its 20 s of context.
-- **Loose or contested ball.** Possession stays with the team that had it: changing team has a
-  cost in the decoder, paid only by sustained evidence for the other team.
-- **Brief possessions are kept.** We first read "a simple touch without control is not a change
-  of possession" as a duration rule (a spell under 2 s between two spells of the other team does
-  not count). CHALLENGE.md says that the public ground truth wins over any reading of the
-  definition, and it contains short possessions that this rule would delete. The rule is switched
-  off (`min_spell_s: 0`); the code is kept for the record.
-- **Stoppages.** The model's cues are the players (collective slowing, kick-off formation,
-  players off the pitch) and the ball beyond a line. It is trained not to rely on a ball that
-  stops moving.
-- **Restarts.** The decoder remembers which team had the ball before the stoppage, and a restart
-  by the same team costs slightly more than one by the other team.
-- **Dead-ball ownership** is not asked for: a dead ball is `D`.
-- **Halves** are decoded separately, so nothing carries over half-time. The frames graded before
-  the second-half kick-off are labelled `D` by the model itself; no frame number is written in
-  the code.
+| situation | what the system does |
+|---|---|
+| any graded frame | always `H`, `A` or `D`. No abstention. `X` is written only outside the two halves, whose limits come from the official `games.py` |
+| ball not tracked | possession carries on. The model infers the team from the players and from the last and next sightings within its 20 s of context |
+| loose or contested ball | possession stays with the team that had it. Changing team has a cost in the decoder, paid only by sustained evidence for the other team |
+| brief possession | kept (see below) |
+| stoppage | detected from the players (collective slowing, kick-off formation, players off the pitch) and from the ball beyond a line. The model is trained not to rely on a ball that stops moving |
+| restart | the decoder remembers which team had the ball before the stoppage. A restart by the same team costs slightly more than one by the other team |
+| dead ball | always `D`. Who owns the dead ball is not asked for |
+| half-time | the halves are decoded separately, nothing carries over. The frames graded before the second-half kick-off are labelled `D` by the model itself. No frame number is written in the code |
+
+**Brief possessions.** We first read "a simple touch without control is not a change of
+possession" as a duration rule: a spell under 2 s between two spells of the other team does not
+count. CHALLENGE.md says that the public ground truth wins over any reading of the definition, and
+it contains short possessions that this rule would delete. The rule is switched off
+(`min_spell_s: 0`). The code is kept for the record.
 
 ## 5. Results and checks
 
-**On other games** (ten games, each predicted by a model that never saw it; the benchmark whose
-tracking is closest to an automatic one; mean of the per-source means, labels as published):
+### On other games
+
+Ten games, each predicted by a model that never saw it. Tracking degraded to be as close as we
+could make it to an automatic one. Mean of the per-source means, labels as published.
 
 | | spellF1 | dead-ball frames found |
 |---|---|---|
 | model trained without moving dead balls | 0.641 | 72 % |
 | final model, same decoder | 0.725 | 98 % |
-| final model, decoder searched out-of-fold | **0.752** (Metrica 0.780, DFL 0.723) | |
+| final model, decoder searched on held-out predictions | **0.752** (Metrica 0.780, DFL 0.723) | |
 
 Per game, the final system scores between 0.66 and 0.80. The decoder parameters were searched by
-coordinate ascent on these out-of-fold predictions (`deep_tune.py`). For reference, the published
+coordinate ascent on these held-out predictions (`deep_tune.py`). For reference, the published
 floor of the organisers' baseline is 0.243 on the provided match.
 
-**On the provided match**, checks only, none of them used to choose a parameter:
+### On the provided match
+
+Checks only. None of them was used to choose a parameter.
 
 - `mtah data check-loader`: our loader rebuilds the four official baselines byte for byte.
 - The frames graded before the second-half kick-off, which FAQ.md says are all dead ball, are all
   `D` in our file.
 - On the public 5 minutes, as the official README suggests ("compare the poss and dur columns"):
-  19 possessions against 17 in the ground truth, mean duration 12.8 s against 14.2 s; the four
+  19 possessions against 17 in the ground truth, mean duration 12.8 s against 14.2 s. The four
   stoppages start and end within one second of the truth, except two boundaries within three.
-  spellF1 on this window is 0.77; with 17 possessions it carries little information.
+  spellF1 on this window is 0.77. With 17 possessions it carries little information.
 - `mtah final` produces the same bytes twice, with and without the tracking cache.
 
-These checks did tell us where the pipeline was wrong: an earlier version produced too many
-possessions on the public window, a later one found the stoppages but made them too short.
-Each fault was then reproduced on the other games and corrected there, with their labels.
+These checks told us where the pipeline was wrong. An earlier version produced too many
+possessions on the public window. A later one found the stoppages but made them too short. Each
+fault was then reproduced on the other games and corrected there, with their labels.
 
 ## 6. Limitations
 
-- Possessions shorter than 2 s are the hard part: fewer than half are recovered on the other
-  games, and each one missed also damages the possession it interrupts.
-- Our benchmark is a simulation of automatic tracking. Two gaps between simulation and reality
-  were found and closed; others may remain, and the score on other games is an estimate, not a
-  measurement, of the score on the provided match.
-- With the ball untracked for tens of seconds, the team in possession is inferred from the players
-  alone, and a change of possession inside such a stretch can be missed.
-- The label convention of the training games (possession changes at every touch) is assumed to be
-  that of the provided match. The public window is consistent with it, on 17 possessions.
-- Smart Tagging and the video are unused; both could help with restarts and with the lost ball.
-- Training on a GPU is not bit-reproducible. The published weights are pinned by hash and the
+- **Short possessions.** Possessions under 2 s are the hard part. Fewer than half are recovered on
+  the other games, and each one missed also damages the possession it interrupts.
+- **Simulated benchmark.** Our benchmark simulates automatic tracking. Two gaps between simulation
+  and reality were found and closed. Others may remain. The score on other games is an estimate,
+  not a measurement, of the score on the provided match.
+- **Long ball losses.** With the ball untracked for tens of seconds, the team in possession is
+  inferred from the players alone. A change of possession inside such a stretch can be missed.
+- **Label convention.** We assume the provided match is labelled like the training games
+  (possession changes at every touch). The public window is consistent with it, on 17 possessions.
+- **Training is not bit-reproducible** on a GPU. The published weights are pinned by hash, and the
   prediction from them is bit-reproducible.
+
+**With more time** we would use the Smart Tagging and the video, which are unused today. Both
+could help with restarts and with the lost ball. We would also work on the short possessions,
+which cost the most.
 
 ## 7. Reproduction
 
@@ -180,8 +220,11 @@ cd dimacodm-mtah2027-possession
 uv sync --locked
 # unpack the data bundle into data/, or set MTAH_DATA_DIR
 uv run mtah data check-loader
-uv run mtah final dimacodm          # writes final/DIMACodm.csv; compare with final/SUBMISSION.json
+uv run mtah final dimacodm          # writes final/DIMACodm.csv
 ```
 
-Python 3.11 and every dependency are pinned in `uv.lock`. No GPU; `mtah final` runs the solution
-twice, about 15 minutes each on a 4-core laptop. Training is described in docs/TRAINING.md.
+Compare the sha256 that `mtah final` prints with the one in `final/SUBMISSION.json`.
+
+Python 3.11 and every dependency are pinned in `uv.lock`. No GPU is needed. `mtah final` runs the
+solution twice, about 15 minutes each on a 4-core laptop, and checks that both runs give the same
+bytes. Training is described in docs/TRAINING.md.

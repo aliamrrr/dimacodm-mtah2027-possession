@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 400" width="940" height="400" role="img" aria-label="The four states of the decoder and the cost of each move">
+<title>The four states of the decoder and the cost of each move</title>
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#52606d"/></marker>
+</defs>
+<rect x="0" y="0" width="940" height="400" fill="#ffffff"/>
+<rect x="170" y="50" width="190" height="70" rx="8" fill="#e1ecfb" stroke="#3b6fb6" stroke-width="1.5"/>
+<text font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#1f2933" text-anchor="middle" dominant-baseline="middle"><tspan x="265.0" y="74.5">H</tspan></text>
+<text font-family="Arial, Helvetica, sans-serif" font-size="11.5" font-weight="normal" fill="#52606d" text-anchor="middle" dominant-baseline="middle"><tspan x="265.0" y="97.0">home team has the ball</tspan></text>
+<rect x="580" y="50" width="190" height="70" rx="8" fill="#e1ecfb" stroke="#3b6fb6" stroke-width="1.5"/>
+<text font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#1f2933" text-anchor="middle" dominant-baseline="middle"><tspan x="675.0" y="74.5">A</tspan></text>
+<text font-family="Arial, Helvetica, sans-serif" font-size="11.5" font-weight="normal" fill="#52606d" text-anchor="middle" dominant-baseline="middle"><tspan x="675.0" y="97.0">away team has the ball</tspan></text>
+<rect x="170" y="280" width="190" height="70" rx="8" fill="#f5f7fa" stroke="#9aa5b1" stroke-width="1.5"/>
+<text font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#1f2933" text-anchor="middle" dominant-baseline="middle"><tspan x="265.0" y="304.5">D after H</tspan></text>
+<text font-family="Arial, Helvetica, sans-serif" font-size="11.5" font-weight="normal" fill="#52606d" text-anchor="middle" dominant-baseline="middle"><tspan x="265.0" y="327.0">dead ball, home had it</tspan></text>
+<rect x="580" y="280" width="190" height="70" rx="8" fill="#f5f7fa" stroke="#9aa5b1" stroke-width="1.5"/>
+<text font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#1f2933" text-anchor="middle" dominant-baseline="middle"><tspan x="675.0" y="304.5">D after A</tspan></text>
+<text font-family="Arial, Helvetica, sans-serif" font-size="11.5" font-weight="normal" fill="#52606d" text-anchor="middle" dominant-baseline="middle"><tspan x="675.0" y="327.0">dead ball, away had it</tspan></text>
+<line x1="364" y1="85.0" x2="575" y2="85.0" stroke="#52606d" stroke-width="1.6" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<text font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="bold" fill="#1f2933" text-anchor="middle" dominant-baseline="middle"><tspan x="470.0" y="71.0">change of team: 5</tspan></text>
+<text font-family="Arial, Helvetica, sans-serif" font-size="11.5" font-weight="normal" fill="#52606d" text-anchor="middle" dominant-baseline="middle"><tspan x="470.0" y="100.0">cheaper where a change is detected</tspan></text>
+<line x1="243.0" y1="124" x2="243.0" y2="275" stroke="#52606d" stroke-width="1.6" marker-end="url(#arrow)"/>
+<line x1="287.0" y1="276" x2="287.0" y2="125" stroke="#52606d" stroke-width="1.6" marker-end="url(#arrow)"/>
+<text font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="bold" fill="#1f2933" text-anchor="end" dominant-baseline="middle"><tspan x="231.0" y="178.0">down, stoppage: 5</tspan></text>
+<text font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="bold" fill="#1f2933" text-anchor="end" dominant-baseline="middle"><tspan x="231.0" y="206.0">up, restart by the</tspan><tspan x="231.0" y="222.0">same team: 31</tspan></text>
+<line x1="653.0" y1="124" x2="653.0" y2="275" stroke="#52606d" stroke-width="1.6" marker-end="url(#arrow)"/>
+<line x1="697.0" y1="276" x2="697.0" y2="125" stroke="#52606d" stroke-width="1.6" marker-end="url(#arrow)"/>
+<text font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="bold" fill="#1f2933" text-anchor="start" dominant-baseline="middle"><tspan x="709.0" y="178.0">down, stoppage: 5</tspan></text>
+<text font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="bold" fill="#1f2933" text-anchor="start" dominant-baseline="middle"><tspan x="709.0" y="206.0">up, restart by the</tspan><tspan x="709.0" y="222.0">same team: 31</tspan></text>
+<line x1="364" y1="288" x2="575" y2="118" stroke="#52606d" stroke-width="1.6" marker-end="url(#arrow)"/>
+<line x1="576" y1="288" x2="365" y2="118" stroke="#52606d" stroke-width="1.6" marker-end="url(#arrow)"/>
+<rect x="378.0" y="198.0" width="184" height="40" fill="#ffffff"/>
+<text font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="bold" fill="#1f2933" text-anchor="middle" dominant-baseline="middle"><tspan x="470.0" y="210.0">restart, other team: 30</tspan></text>
+<text font-family="Arial, Helvetica, sans-serif" font-size="11.5" font-weight="normal" fill="#52606d" text-anchor="middle" dominant-baseline="middle"><tspan x="470.0" y="228.0">cheaper while players accelerate</tspan></text>
+<text font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" fill="#52606d" text-anchor="middle" dominant-baseline="middle"><tspan x="470.0" y="384.0">Staying in a state is free. A move is made only when the evidence outweighs its cost.</tspan></text>
+</svg>
