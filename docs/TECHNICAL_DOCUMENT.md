@@ -32,6 +32,11 @@ tracking of the provided match (section 3).
 
 ![From the tracking of the match to the possession file](figures/pipeline.svg)
 
+*Figure 1. Architecture. (a) Each frame is read as an unordered set of objects. (b) The sequence of
+frame vectors is read with 20 s of context on each side; the drawing shows the first four of the
+nine dilations. (c) The state and team-change outputs feed a Viterbi decoder; the ball position
+and possessor heads are used in training only. The drawing is schematic.*
+
 1. **Frame description.** Each tracked player and the ball become one token: position, velocity,
    team, and position and speed relative to the ball. Thirty global features complete the frame,
    for example how fast the players move, whether the ball is beyond a line, and how many players
@@ -42,8 +47,9 @@ tracking of the provided match (section 3).
 3. **Temporal convolution, across time.** Nine dilated blocks give every frame 20 seconds of
    context on each side. This is what lets the model follow a possession while the ball is lost.
 4. **Outputs.** The model answers two questions per frame: which team controls the ball, and is
-   the ball dead. Three extra outputs are used only during training to shape the model: the ball
-   position, the player in possession, and the frames where the team changes.
+   the ball dead. A third output marks the frames where the team changes; the decoder uses it.
+   Two more are used only during training to shape the model: the ball position and the player
+   in possession.
 5. **Ensemble.** Six models are averaged. Each one runs twice, once as is and once with the two
    teams swapped, so the result treats both teams exactly the same way.
 6. **Decoder.** A Viterbi decoder turns the noisy per-frame scores into possessions.
@@ -51,6 +57,8 @@ tracking of the provided match (section 3).
 ### The decoder
 
 ![The four states of the decoder and the cost of each move](figures/decoder.svg)
+
+*Figure 2. The decoder. (a) The four states and the moves between them. (b) What each move costs.*
 
 The decoder has four states. It remembers which team had the ball before a stoppage. Staying in a
 state is free and every move has a cost, so it only changes state when the evidence is strong and
@@ -90,6 +98,10 @@ None of it comes from the provided match. We labelled nothing by hand. All label
 publishers of the data.
 
 ![Where the training data comes from and what the provided match is used for](figures/training.svg)
+
+*Figure 3. Training. (a) The three public sources. (b) Their clean tracking is degraded at random
+for every training window. (c) Six models are trained; each benchmark game is scored by a model
+that never saw it. The provided match is used for prediction only.*
 
 | source | games | tracking | labels, and who made them |
 |---|---|---|---|

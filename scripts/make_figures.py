@@ -1,20 +1,30 @@
-"""Write the three SVG figures of the documentation: python scripts/make_figures.py docs/figures."""
+"""Write the three SVG figures of the documentation: python scripts/make_figures.py docs/figures.
 
+The drawings are schematic: the dots, the token matrix and the curves are illustrative, they are
+not data of any match. The files are plain ASCII SVG and need no dependency.
+"""
+
+import random
 import sys
 from pathlib import Path
 
-OUT = Path(sys.argv[1])
-OUT.mkdir(parents=True, exist_ok=True)
+OUT = Path(sys.argv[1]) if len(sys.argv) > 1 else Path("docs/figures")
 
-INK = "#1f2933"
-MUTED = "#52606d"
-LINE = "#52606d"
-GREY = ("#f5f7fa", "#9aa5b1")
-BLUE = ("#e1ecfb", "#3b6fb6")
-GREEN = ("#e3f5e8", "#2f855a")
-AMBER = ("#fdf1d8", "#b7791f")
-RED = ("#fde8e8", "#c53030")
-FONT = 'font-family="Arial, Helvetica, sans-serif"'
+INK = "#111111"
+MUTED = "#666666"
+RULE = "#444444"
+FAINT = "#c9ccd1"
+BLUE = "#1f4e9c"
+ORANGE = "#d9651e"
+GREY = "#8a8f98"
+GOLD = "#e0a800"
+PALE_BLUE = "#dbe5f4"
+PALE_GREY = "#ececec"
+SERIF = "font-family=\"'Times New Roman', Times, serif\""
+PLUS_MINUS = "&#177;"
+ELEMENT_OF = "&#8712;"
+Y_HAT = "&#375;"
+TIMES = "&#215;"
 
 
 def head(w: int, h: int, title: str) -> list[str]:
@@ -23,292 +33,383 @@ def head(w: int, h: int, title: str) -> list[str]:
         f'role="img" aria-label="{title}">',
         f"<title>{title}</title>",
         "<defs>",
-        '<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" '
-        f'markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="{LINE}"/>'
-        "</marker>",
+        '<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" '
+        f'markerHeight="6.5" orient="auto-start-reverse"><path d="M0,1 L10,5 L0,9 z" '
+        f'fill="{INK}"/></marker>',
         "</defs>",
         f'<rect x="0" y="0" width="{w}" height="{h}" fill="#ffffff"/>',
     ]
 
 
-def text(x, y, lines, size=13, weight="normal", fill=INK, anchor="middle", lh=None) -> str:
-    lh = lh or round(size * 1.3)
-    if isinstance(lines, str):
-        lines = [lines]
-    y0 = y - (len(lines) - 1) * lh / 2
-    spans = "".join(
-        f'<tspan x="{x}" y="{y0 + i * lh:.1f}">{line}</tspan>' for i, line in enumerate(lines)
-    )
+def text(x, y, content, size=13, fill=INK, anchor="middle", style="normal", weight="normal") -> str:
     return (
-        f'<text {FONT} font-size="{size}" font-weight="{weight}" fill="{fill}" '
-        f'text-anchor="{anchor}" dominant-baseline="middle">{spans}</text>'
+        f'<text {SERIF} x="{x}" y="{y}" font-size="{size}" fill="{fill}" text-anchor="{anchor}" '
+        f'font-style="{style}" font-weight="{weight}">{content}</text>'
     )
 
 
-def box(x, y, w, h, title, lines=(), color=GREY, dashed=False) -> list[str]:
-    dash = ' stroke-dasharray="6 4"' if dashed else ""
-    out = [
-        f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="8" fill="{color[0]}" '
-        f'stroke="{color[1]}" stroke-width="1.5"{dash}/>'
+def sub(base: str, index: str) -> str:
+    """base with a subscript, for example y with t."""
+    return (
+        f'<tspan font-style="italic">{base}</tspan>'
+        f'<tspan dy="3" font-size="70%" font-style="italic">{index}</tspan><tspan dy="-3"></tspan>'
+    )
+
+
+def sup(value: str) -> str:
+    return f'<tspan dy="-5" font-size="70%">{value}</tspan><tspan dy="5"></tspan>'
+
+
+def label(x, y, main, minor) -> list[str]:
+    return [text(x, y, main, 13), text(x, y + 17, minor, 11, MUTED)]
+
+
+def line(x1, y1, x2, y2, color=INK, width=1.0, dash="", arrow=False, opacity=1.0) -> str:
+    extra = f' stroke-dasharray="{dash}"' if dash else ""
+    extra += ' marker-end="url(#arrow)"' if arrow else ""
+    extra += f' stroke-opacity="{opacity}"' if opacity < 1 else ""
+    return (
+        f'<line x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}" stroke="{color}" '
+        f'stroke-width="{width}"{extra}/>'
+    )
+
+
+def rect(x, y, w, h, fill="#ffffff", stroke=RULE, width=0.9, dash="", rx=0) -> str:
+    extra = f' stroke-dasharray="{dash}"' if dash else ""
+    return (
+        f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="{rx}" fill="{fill}" '
+        f'stroke="{stroke}" stroke-width="{width}"{extra}/>'
+    )
+
+
+def circle(x, y, r, fill, stroke="none", width=0.0) -> str:
+    return (
+        f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{r}" fill="{fill}" stroke="{stroke}" '
+        f'stroke-width="{width}"/>'
+    )
+
+
+def panel(x1, x2, title) -> list[str]:
+    """Italic panel title with a bracket under it."""
+    y = 30
+    return [
+        text((x1 + x2) / 2, 20, title, 13, style="italic"),
+        f'<path d="M{x1},{y + 6} L{x1},{y} L{x2},{y} L{x2},{y + 6}" fill="none" '
+        f'stroke="{RULE}" stroke-width="0.8"/>',
     ]
-    cx = x + w / 2
-    if lines:
-        n = len(lines)
-        block = 18 + 6 + n * 15
-        top = y + (h - block) / 2
-        out.append(text(cx, top + 9, title, 13.5, "bold"))
-        out.append(text(cx, top + 18 + 6 + n * 15 / 2, list(lines), 11.5, fill=MUTED, lh=15))
-    else:
-        out.append(text(cx, y + h / 2, title, 13.5, "bold"))
+
+
+def pitch(x, y, w, h, players, ball=None, ball_lost=False, r=2.6) -> list[str]:
+    """A small pitch. players: (u, v, team) with u, v in [0, 1]."""
+    out = [
+        rect(x, y, w, h, "#f6f6f4", GREY, 0.8),
+        line(x + w / 2, y, x + w / 2, y + h, GREY, 0.8),
+        f'<circle cx="{x + w / 2}" cy="{y + h / 2}" r="{h * 0.14:.1f}" fill="none" '
+        f'stroke="{GREY}" stroke-width="0.8"/>',
+        rect(x, y + h * 0.25, w * 0.13, h * 0.5, "none", GREY, 0.8),
+        rect(x + w * 0.87, y + h * 0.25, w * 0.13, h * 0.5, "none", GREY, 0.8),
+    ]
+    for u, v, team in players:
+        out.append(circle(x + u * w, y + v * h, r, BLUE if team == 0 else ORANGE))
+    if ball is not None:
+        bx, by = x + ball[0] * w, y + ball[1] * h
+        if ball_lost:
+            out.append(circle(bx, by, r + 1.4, "none", GOLD, 1.2))
+        else:
+            out.append(circle(bx, by, r, GOLD, INK, 0.8))
     return out
-
-
-def arrow(x1, y1, x2, y2, both=False, dashed=False) -> str:
-    start = ' marker-start="url(#arrow)"' if both else ""
-    dash = ' stroke-dasharray="5 4"' if dashed else ""
-    return (
-        f'<line x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}" stroke="{LINE}" stroke-width="1.6"'
-        f'{dash} marker-end="url(#arrow)"{start}/>'
-    )
-
-
-def path(d) -> str:
-    return (
-        f'<path d="{d}" fill="none" stroke="{LINE}" stroke-width="1.6" marker-end="url(#arrow)"/>'
-    )
 
 
 def save(name: str, parts: list[str]) -> None:
     body = "\n".join([*parts, "</svg>"]) + "\n"
-    body.encode("ascii")
     (OUT / name).write_text(body, encoding="ascii", newline="\n")
     print("wrote", name)
 
 
-# ---------------------------------------------------------------- figure 1: inference pipeline
-W, H = 980, 330
-p = head(W, H, "From the tracking of the match to the possession file")
-bw, bh, gap = 205, 96, 40
-xs = [20 + i * (bw + gap) for i in range(4)]
-y1, y2 = 44, 204
-p.append(text(20, 22, "For every frame", 12, "bold", MUTED, "start"))
-p += box(
-    xs[0],
-    y1,
-    bw,
-    bh,
-    "Tracking of the match",
-    ["players and ball positions", "25 frames per second", "ball often missing"],
-    GREY,
-)
-p += box(
-    xs[1],
-    y1,
-    bw,
-    bh,
-    "Frame description",
-    ["one token per tracked player", "one token for the ball", "30 global features"],
-    GREY,
-)
-p += box(
-    xs[2],
-    y1,
-    bw,
-    bh,
-    "Set transformer",
-    ["2 attention layers", "looks at all players at once", "any number, any order"],
-    BLUE,
-)
-p += box(
-    xs[3],
-    y1,
-    bw,
-    bh,
-    "Temporal convolution",
-    ["9 dilated blocks", "20 s of context", "before and after the frame"],
-    BLUE,
-)
-for i in range(3):
-    p.append(arrow(xs[i] + bw + 3, y1 + bh / 2, xs[i + 1] - 4, y1 + bh / 2))
-# down and back to the left for the second row
-p.append(path(f"M{xs[3] + bw / 2},{y1 + bh + 3} L{xs[3] + bw / 2},{y2 - 5}"))
-p.append(text(20, y2 - 22, "For the whole match", 12, "bold", MUTED, "start"))
-p += box(
-    xs[3],
-    y2,
-    bw,
-    bh,
-    "Ensemble",
-    ["6 models, each run twice", "(teams as is, teams swapped)", "scores are averaged"],
-    BLUE,
-)
-p += box(
-    xs[2],
-    y2,
-    bw,
-    bh,
-    "Viterbi decoder",
-    ["4 states, one half at a time", "turns noisy scores into", "clean possessions"],
-    AMBER,
-)
-p += box(
-    xs[1],
-    y2,
-    bw,
-    bh,
-    "DIMACodm.csv",
-    ["one label per frame", "H, A, D or X", "199,319 rows"],
-    GREEN,
-)
-p.append(arrow(xs[3] - 3, y2 + bh / 2, xs[2] + bw + 4, y2 + bh / 2))
-p.append(arrow(xs[2] - 3, y2 + bh / 2, xs[1] + bw + 4, y2 + bh / 2))
-p.append(
-    text(
-        xs[0] + bw / 2,
-        y2 + bh / 2,
-        ["numpy only, no GPU", "about 15 minutes", "same bytes on any machine"],
-        12,
-        fill=MUTED,
-        lh=17,
-    )
-)
-save("pipeline.svg", p)
+def formation(rng: random.Random) -> list[tuple[float, float, int]]:
+    home = [(0.06, 0.5), (0.2, 0.2), (0.19, 0.42), (0.2, 0.62), (0.22, 0.83), (0.36, 0.3),
+            (0.34, 0.55), (0.4, 0.75), (0.5, 0.2), (0.52, 0.5), (0.5, 0.8)]  # fmt: skip
+    away = [(0.93, 0.5), (0.74, 0.18), (0.76, 0.4), (0.75, 0.6), (0.73, 0.82), (0.6, 0.32),
+            (0.62, 0.52), (0.6, 0.72), (0.47, 0.36), (0.45, 0.64), (0.55, 0.9)]  # fmt: skip
+    jitter = lambda value: min(0.97, max(0.03, value + rng.uniform(-0.03, 0.03)))  # noqa: E731
+    return [(jitter(u), jitter(v), 0) for u, v in home] + [
+        (jitter(u), jitter(v), 1) for u, v in away
+    ]
 
-# ---------------------------------------------------------------- figure 2: the decoder
-W, H = 940, 400
-p = head(W, H, "The four states of the decoder and the cost of each move")
-sw, sh = 190, 70
-xl, xr, yt, yb = 170, 580, 50, 280
-p += box(xl, yt, sw, sh, "H", ["home team has the ball"], BLUE)
-p += box(xr, yt, sw, sh, "A", ["away team has the ball"], BLUE)
-p += box(xl, yb, sw, sh, "D after H", ["dead ball, home had it"], GREY)
-p += box(xr, yb, sw, sh, "D after A", ["dead ball, away had it"], GREY)
-# change of team
-p.append(arrow(xl + sw + 4, yt + sh / 2, xr - 5, yt + sh / 2, both=True))
-p.append(text((xl + sw + xr) / 2, yt + sh / 2 - 14, "change of team: 5", 12.5, "bold"))
-p.append(
-    text(
-        (xl + sw + xr) / 2, yt + sh / 2 + 15, "cheaper where a change is detected", 11.5, fill=MUTED
-    )
-)
-# stoppage and same-team restart, left and right
-for x0, side in ((xl, -1), (xr, 1)):
-    xa = x0 + sw / 2 - 22
-    xb = x0 + sw / 2 + 22
-    p.append(arrow(xa, yt + sh + 4, xa, yb - 5))
-    p.append(arrow(xb, yb - 4, xb, yt + sh + 5))
-    tx = xa - 12 if side < 0 else xb + 12
-    anchor = "end" if side < 0 else "start"
-    ym = (yt + sh + yb) / 2
-    p.append(text(tx, ym - 22, "down, stoppage: 5", 12.5, "bold", anchor=anchor))
+
+def heat(value: float) -> str:
+    """Diverging blue / white / red colour for a value in [-1, 1]."""
+    low, high = (33, 76, 156), (178, 34, 44)
+    target = high if value > 0 else low
+    mix = min(1.0, abs(value))
+    rgb = [round(255 + (channel - 255) * mix) for channel in target]
+    return f"#{rgb[0]:02x}{rgb[1]:02x}{rgb[2]:02x}"
+
+
+# ------------------------------------------------------------------ figure 1: the architecture
+def architecture() -> None:
+    rng = random.Random(7)
+    w, h = 1012, 285
+    p = head(w, h, "Architecture of the model, from the tracking to the label of each frame")
+    p += panel(18, 428, "(a) Per-frame set encoder")
+    p += panel(452, 706, "(b) Temporal model")
+    p += panel(726, 1004, "(c) Heads and structured decoding")
+    top, bottom, mid = 62, 212, 137
+    ly = 242
+
+    # (a) pitch, token matrix, set transformer, frame vector
+    players = formation(rng)
+    p += pitch(22, mid - 34, 104, 68, players, ball=(0.36, 0.33))
+    p += label(74, ly, "Tracking", "46 slots + ball")
+    p.append(line(131, mid, 151, mid, arrow=True))
+
+    rows, cols, cw, ch = 25, 13, 4.6, 6.0
+    mx = 156
+    empty = set(rng.sample(range(rows - 1), 6))
+    for i in range(rows):
+        for j in range(cols):
+            value = 0.0 if i in empty else rng.uniform(-1, 1) * (0.9 if j < 9 else 0.5)
+            p.append(
+                f'<rect x="{mx + j * cw:.1f}" y="{top + i * ch:.1f}" width="{cw}" height="{ch}" '
+                f'fill="{heat(value)}"/>'
+            )
+    p.append(rect(mx, top, cols * cw, rows * ch, "none", RULE, 0.8))
     p.append(
-        text(tx, ym + 14, ["up, restart by the", "same team: 31"], 12.5, "bold", anchor=anchor)
-    )
-# restart by the other team (diagonals)
-p.append(arrow(xl + sw + 4, yb + 8, xr - 5, yt + sh - 2))
-p.append(arrow(xr - 4, yb + 8, xl + sw + 5, yt + sh - 2))
-p.append(
-    f'<rect x="{(xl + sw + xr) / 2 - 92}" y="{(yt + sh + yb) / 2 - 2}" width="184" '
-    f'height="40" fill="#ffffff"/>'
-)
-p.append(text((xl + sw + xr) / 2, (yt + sh + yb) / 2 + 10, "restart, other team: 30", 12.5, "bold"))
-p.append(
-    text(
-        (xl + sw + xr) / 2,
-        (yt + sh + yb) / 2 + 28,
-        "cheaper while players accelerate",
-        11.5,
-        fill=MUTED,
-    )
-)
-p.append(
-    text(
-        W / 2,
-        H - 16,
-        "Staying in a state is free. A move is made only when the evidence outweighs its cost.",
-        12,
-        fill=MUTED,
-    )
-)
-save("decoder.svg", p)
+        text(mx + cols * cw / 2, ly,
+             f'<tspan font-weight="bold">X</tspan><tspan dy="3" font-size="70%" '
+             f'font-style="italic">t</tspan><tspan dy="-3"> {ELEMENT_OF} </tspan>'
+             f'<tspan font-style="italic">R</tspan>{sup(f"47{TIMES}13")}', 13)
+    )  # fmt: skip
+    p.append(text(mx + cols * cw / 2, ly + 17, "masked tokens", 11, MUTED))
+    p.append(line(mx + cols * cw + 6, mid, 240, mid, arrow=True))
 
-# ---------------------------------------------------------------- figure 3: training
-W, H = 940, 400
-p = head(W, H, "Where the training data comes from and what the provided match is used for")
-sx, sw, sh = 20, 210, 62
-ys = [40, 116, 192]
-p.append(text(sx, 20, "Public data about other games", 12, "bold", MUTED, "start"))
-p += box(sx, ys[0], sw, sh, "Metrica Sports", ["3 games, labels from events"], GREY)
-p += box(sx, ys[1], sw, sh, "IDSSE / DFL", ["7 games, labels on every frame"], GREY)
-p += box(sx, ys[2], sw, sh, "SkillCorner", ["20 games, training only"], GREY)
-dx, dw = 280, 200
-p += box(
-    dx,
-    86,
-    dw,
-    122,
-    "Degrade the tracking",
-    [
-        "anonymous track slots",
-        "gaps and identity swaps",
-        "ball lost for up to 30 s",
-        "ball moving while dead",
-    ],
-    AMBER,
-)
-for y in ys:
-    p.append(arrow(sx + sw + 3, y + sh / 2, dx - 5, 147 + (y - ys[1]) * 0.35))
-tx, tw = 530, 190
-p += box(
-    tx,
-    86,
-    tw,
-    122,
-    "Train 6 models",
-    [
-        "5 folds by game",
-        "+ 1 model on all games",
-        "each benchmark game is",
-        "scored by a model that",
-        "never saw it",
-    ],
-    BLUE,
-)
-p.append(arrow(dx + dw + 3, 147, tx - 5, 147))
-ox, ow = 770, 150
-p += box(ox, 56, ow, 70, "Weights", ["models/dimacodm", "pinned by sha256"], GREEN)
-p += box(ox, 168, ow, 70, "Decoder settings", ["searched on held-out", "predictions"], GREEN)
-p.append(arrow(tx + tw + 3, 130, ox - 5, 96))
-p.append(arrow(tx + tw + 3, 164, ox - 5, 200))
-# the provided match
-my = 300
-p.append(text(sx, my - 18, "The provided match", 12, "bold", MUTED, "start"))
-p += box(
-    sx,
-    my,
-    480,
-    76,
-    "FC Barcelona vs Athletic Club",
-    [
-        "never used to train a model or to choose a setting",
-        "its tracking was only described, without labels, to set the degradation",
-    ],
-    RED,
-    dashed=True,
-)
-p += box(
-    ox - 190,
-    my,
-    ow + 190,
-    76,
-    "Prediction and checks",
-    ["the trained system is applied to the match", "public 5 minutes: checks only"],
-    GREY,
-)
-p.append(arrow(sx + 480 + 3, my + 38, ox - 190 - 5, my + 38))
-p.append(path(f"M{ox + ow / 2},{238 + 3} L{ox + ow / 2},{my - 5}"))
-p.append(
-    path(f"M{sx + 380},{my - 4} L{sx + 380},{250} L{dx + dw / 2},{250} L{dx + dw / 2},{208 + 5}")
-)
-p.append(text(sx + 388, 268, "label-free description", 11.5, fill=MUTED, anchor="start"))
-save("training.svg", p)
+    bx, bw = 245, 92
+    p.append(rect(bx, top - 4, bw, bottom - top + 8, "#ffffff", RULE, 0.8, dash="3 2"))
+    blocks = [("LayerNorm", "#ffffff"), ("Masked MHSA", PALE_BLUE), ("LayerNorm", "#ffffff"),
+              ("MLP", PALE_GREY)]  # fmt: skip
+    for i, (name, fill) in enumerate(blocks):
+        y = top + 8 + i * 35
+        p.append(rect(bx + 9, y, bw - 18, 27, fill, RULE, 0.8))
+        p.append(text(bx + bw / 2, y + 18, name, 10.5))
+    p += label(bx + bw / 2, ly, "Set Transformer", f"{TIMES}2, 4 heads, d = 64")
+    p.append(line(bx + bw + 5, mid, 378, mid, arrow=True))
+
+    zx = 383
+    for i in range(rows):
+        p.append(
+            f'<rect x="{zx}" y="{top + i * ch:.1f}" width="13" height="{ch}" '
+            f'fill="{heat(rng.uniform(-1, 1))}"/>'
+        )
+    p.append(rect(zx, top, 13, rows * ch, "none", RULE, 0.8))
+    p.append(
+        text(zx + 6.5, ly,
+             f'<tspan font-weight="bold">z</tspan><tspan dy="3" font-size="70%" '
+             f'font-style="italic">t</tspan><tspan dy="-3"> {ELEMENT_OF} </tspan>'
+             f'<tspan font-style="italic">R</tspan>{sup("128")}', 13)
+    )  # fmt: skip
+    p.append(text(zx + 6.5, ly + 17, "team pooling", 11, MUTED))
+    p.append(line(zx + 19, mid, 462, mid, arrow=True))
+
+    # (b) dilated convolutions: the cone of one output frame, first four dilations
+    n, x0, step = 31, 468, 6.4
+    ys = [bottom, bottom - 36, bottom - 74, bottom - 112, bottom - 150]
+    centre = n // 2
+    cones = [set(), set(), set(), set(), {centre}]
+    for level, d in ((4, 8), (3, 4), (2, 2), (1, 1)):
+        for i in cones[level]:
+            cones[level - 1].update({i - d, i, i + d})
+    for level in range(5):
+        for i in range(n):
+            if i not in cones[level]:
+                p.append(circle(x0 + i * step, ys[level], 1.0, FAINT))
+    for level, d in ((4, 8), (3, 4), (2, 2), (1, 1)):
+        for i in sorted(cones[level]):
+            for j in (i - d, i, i + d):
+                p.append(line(x0 + i * step, ys[level], x0 + j * step, ys[level - 1], BLUE, 0.9))
+    for level in range(5):
+        for i in sorted(cones[level]):
+            p.append(circle(x0 + i * step, ys[level], 2.2, BLUE))
+    for level, d in ((4, 8), (3, 4), (2, 2), (1, 1)):
+        p.append(text(x0 + n * step + 2, ys[level] + 4, f"d = {d}", 10.5, MUTED, "start", "italic"))
+    cx = x0 + (n - 1) * step / 2 + 14
+    p += label(cx, ly, "Dilated residual TCN (d = 1, ..., 256)",
+               f"9 blocks, {PLUS_MINUS}511 frames (about {PLUS_MINUS}20 s)")  # fmt: skip
+    p.append(line(710, mid, 732, mid, arrow=True))
+
+    # (c) heads, trellis, labels
+    hx, hw = 738, 82
+    p.append(text(hx + hw / 2, top - 1, f"p({sub('y', 't')})", 11.5, style="italic"))
+    by, bh = top + 8, 46
+    p.append(rect(hx, by, hw, bh, BLUE, "none", 0))
+    p.append(f'<polygon points="{hx},{by} {hx + 20},{by} {hx + 15},{by + bh} {hx},{by + bh}" '
+             f'fill="{GREY}"/>')  # fmt: skip
+    p.append(f'<polygon points="{hx + 50},{by} {hx + 64},{by} {hx + 68},{by + bh} '
+             f'{hx + 55},{by + bh}" fill="{ORANGE}"/>')  # fmt: skip
+    p.append(text(hx + hw / 2, by + bh + 22, "p(team change)", 11.5, style="italic"))
+    cy = bottom
+    p.append(
+        f'<path d="M{hx},{cy} L{hx + 10},{cy} C{hx + 15},{cy} {hx + 15},{cy - 30} {hx + 18},{cy - 30} '
+        f"C{hx + 21},{cy - 30} {hx + 21},{cy} {hx + 27},{cy} L{hx + 44},{cy} "
+        f"C{hx + 49},{cy} {hx + 49},{cy - 40} {hx + 52},{cy - 40} "
+        f"C{hx + 55},{cy - 40} {hx + 55},{cy - 6} {hx + 59},{cy - 6} "
+        f"C{hx + 62},{cy - 6} {hx + 62},{cy - 34} {hx + 65},{cy - 34} "
+        f'C{hx + 68},{cy - 34} {hx + 68},{cy} {hx + 74},{cy} L{hx + hw},{cy} Z" '
+        f'fill="{PALE_BLUE}" stroke="{BLUE}" stroke-width="1"/>'
+    )
+    p += label(hx + hw / 2, ly, "Output heads", "plus 2 auxiliary heads")
+    p.append(line(hx + hw + 5, mid, hx + hw + 21, mid, arrow=True))
+
+    tx, tstep = 870, 15
+    state_y = [top + 8, top + 54, top + 100, top + 146]
+    state_color = [BLUE, ORANGE, GREY, GREY]
+    allowed = [(0, 0), (1, 1), (2, 2), (3, 3), (0, 1), (1, 0), (0, 2), (1, 3), (2, 1), (2, 0),
+               (3, 0), (3, 1)]  # fmt: skip
+    for name, y in zip(("H", "A", "D|H", "D|A"), state_y, strict=True):
+        p.append(text(tx - 8, y + 3.5, name, 10.5, MUTED, "end"))
+    for col in range(5):
+        for a, b in allowed:
+            p.append(line(tx + col * tstep, state_y[a], tx + (col + 1) * tstep, state_y[b],
+                          FAINT, 0.7))  # fmt: skip
+    path = [0, 0, 2, 1, 1, 0]
+    for col in range(5):
+        p.append(line(tx + col * tstep, state_y[path[col]], tx + (col + 1) * tstep,
+                      state_y[path[col + 1]], INK, 1.8))  # fmt: skip
+    for col in range(6):
+        for s in range(4):
+            on_path = path[col] == s
+            p.append(circle(tx + col * tstep, state_y[s], 2.6 if on_path else 1.8,
+                            state_color[s] if on_path else FAINT))  # fmt: skip
+    p += label(tx + 2.5 * tstep, ly, "4-state Viterbi", "time-varying costs")
+    p.append(line(tx + 5 * tstep + 7, mid, tx + 5 * tstep + 21, mid, arrow=True))
+
+    sx = 978
+    y = top
+    for state, share in zip(path, (0.2, 0.2, 0.16, 0.14, 0.14, 0.16), strict=True):
+        height = share * (bottom - top)
+        p.append(f'<rect x="{sx}" y="{y:.1f}" width="16" height="{height + 0.3:.1f}" '
+                 f'fill="{state_color[state]}"/>')  # fmt: skip
+        y += height
+    p.append(text(sx + 8, ly, f'<tspan font-style="italic">{Y_HAT}</tspan>'
+             f'<tspan dy="3" font-size="70%" font-style="italic">t</tspan>', 13))  # fmt: skip
+    p.append(text(sx + 8, ly + 17, "H / A / D", 11, MUTED))
+    save("pipeline.svg", p)
+
+
+# ------------------------------------------------------------------ figure 2: the decoder
+def decoder() -> None:
+    w, h = 820, 262
+    p = head(w, h, "The four states of the decoder and the cost of each move")
+    p += panel(18, 440, "(a) States and allowed moves")
+    p += panel(470, 802, "(b) Cost of each move")
+    xl, xr, yt, yb, r = 110, 350, 85, 205, 22
+    # change of team
+    p.append(line(xl - 6, yt + r + 2, xl - 6, yb - r - 3, arrow=True))
+    p.append(line(xl + 6, yb - r - 2, xl + 6, yt + r + 3, arrow=True))
+    p.append(text(xl - 14, (yt + yb) / 2 + 4, "change of team", 11, MUTED, "end", "italic"))
+    # stoppage (solid) and restart by the same team (dashed)
+    for y, sign in ((yt, -1), (yb, 1)):
+        p.append(line(xl + r + 2, y + sign * 7, xr - r - 3, y + sign * 7, arrow=True))
+        p.append(line(xr - r - 2, y - sign * 7, xl + r + 3, y - sign * 7, dash="4 3", arrow=True))
+    p.append(text((xl + xr) / 2, yt - 14, "stoppage", 11, MUTED, style="italic"))
+    p.append(text((xl + xr) / 2, yb + 22, "stoppage", 11, MUTED, style="italic"))
+    # restart by the other team
+    p.append(line(xr - r + 2, yt + r - 6, xl + r + 1, yb - r + 4, arrow=True))
+    p.append(line(xr - r + 2, yb - r + 6, xl + r + 1, yt + r - 4, arrow=True))
+    p.append(rect((xl + xr) / 2 + 30, (yt + yb) / 2 - 9, 62, 16, "#ffffff", "none", 0))
+    p.append(text((xl + xr) / 2 + 61, (yt + yb) / 2 + 3, "restart", 11, MUTED, style="italic"))
+    for x, y, name, color in ((xl, yt, "H", BLUE), (xl, yb, "A", ORANGE), (xr, yt, "D|H", GREY),
+                              (xr, yb, "D|A", GREY)):  # fmt: skip
+        p.append(circle(x, y, r, color))
+        p.append(text(x, y + 4.5, name, 13, "#ffffff", weight="bold"))
+    p.append(text(xr, yt - r - 9, "dead ball, home had it", 11, MUTED))
+    p.append(text(xr, yb + r + 16, "dead ball, away had it", 11, MUTED))
+
+    rows = [("change of team", "5", ""), ("stoppage", "5", ""),
+            ("restart by the other team", "30", ""),
+            ("restart by the same team", "31", "4 3")]  # fmt: skip
+    ty = 68
+    p.append(line(478, ty - 16, 794, ty - 16, RULE, 1.0))
+    for i, (name, cost, dash) in enumerate(rows):
+        y = ty + i * 24
+        p.append(line(482, y - 4, 512, y - 4, INK, 1.0, dash=dash, arrow=True))
+        p.append(text(522, y, name, 12.5, anchor="start"))
+        p.append(text(790, y, cost, 12.5, anchor="end"))
+    p.append(line(478, ty + 3 * 24 + 10, 794, ty + 3 * 24 + 10, RULE, 1.0))
+    notes = ["Staying in a state is free.", "A restart is cheaper while the players accelerate.",
+             "A change of team is cheaper where the model detects one.",
+             "Costs searched on held-out games, never on the provided match."]  # fmt: skip
+    for i, note in enumerate(notes):
+        p.append(text(478, ty + 3 * 24 + 30 + i * 16, note, 11, MUTED, "start"))
+    save("decoder.svg", p)
+
+
+# ------------------------------------------------------------------ figure 3: training data
+def training() -> None:
+    rng = random.Random(11)
+    w, h = 1000, 330
+    p = head(w, h, "Where the training data comes from and what the provided match is used for")
+    p += panel(18, 232, "(a) Public data, other games")
+    p += panel(256, 618, "(b) Degradation, redrawn for every window")
+    p += panel(642, 992, "(c) Training and selection")
+
+    sources = [("Metrica Sports", "3 games, labels from events"),
+               ("IDSSE / DFL", "7 games, flags on every frame"),
+               ("SkillCorner", "20 games, training only")]  # fmt: skip
+    for i, (name, detail) in enumerate(sources):
+        y = 52 + i * 56
+        p.append(rect(24, y, 202, 44, "#ffffff", RULE, 0.8))
+        p.append(text(125, y + 18, name, 13))
+        p.append(text(125, y + 35, detail, 11, MUTED))
+    p.append(line(230, 130, 258, 130, arrow=True))
+
+    players = formation(rng)
+    pw, ph, py = 150, 98, 60
+    p += pitch(264, py, pw, ph, players, ball=(0.36, 0.33), r=3)
+    kept = [pl for i, pl in enumerate(players) if i not in (2, 7, 9, 13, 16, 20)]
+    noisy = [(u + rng.uniform(-0.015, 0.015), v + rng.uniform(-0.02, 0.02), t) for u, v, t in kept]
+    p += pitch(462, py, pw, ph, noisy, ball=(0.36, 0.33), ball_lost=True, r=3)
+    p.append(text(462 + 0.36 * pw - 9, py + 0.33 * ph + 4, "ball lost", 10.5, "#9a7400", "end"))
+    p.append(line(264 + pw + 6, py + ph / 2, 462 - 7, py + ph / 2, arrow=True))
+    p += label(264 + pw / 2, py + ph + 22, "Clean tracking", "every player, ball always seen")
+    p += label(462 + pw / 2, py + ph + 22, "Degraded tracking",
+               "anonymous slots, gaps, ball lost up to 30 s")  # fmt: skip
+    p.append(line(622, 130, 648, 130, arrow=True))
+
+    gx, gy, cw, ch = 654, 56, 20, 13
+    for row in range(6):
+        for col in range(5):
+            held = row < 5 and col == row
+            p.append(rect(gx + col * cw, gy + row * (ch + 4), cw - 3, ch,
+                          ORANGE if held else BLUE, "none", 0))  # fmt: skip
+        p.append(text(gx + 5 * cw + 4, gy + row * (ch + 4) + 10.5,
+                      f"fold {row}" if row < 5 else "all games", 10.5, MUTED, "start"))  # fmt: skip
+    p += label(gx + 70, 180, "6 models", "held-out games in orange")
+    for y, name, detail in ((52, "Weights", "pinned by sha256"),
+                            (112, "Decoder settings", "searched on held-out predictions")):  # fmt: skip
+        p.append(rect(824, y, 164, 44, "#ffffff", RULE, 0.8))
+        p.append(text(906, y + 18, name, 13))
+        p.append(text(906, y + 35, detail, 10.5, MUTED))
+    p.append(line(800, 92, 820, 78, arrow=True))
+    p.append(line(800, 108, 820, 128, arrow=True))
+
+    my = 252
+    p.append(rect(24, my, 594, 54, "#ffffff", ORANGE, 1.0, dash="5 3"))
+    p.append(text(321, my + 22, "The provided match, FC Barcelona vs Athletic Club: never used to "
+                  "train a model or to choose a setting", 12.5))  # fmt: skip
+    p.append(text(321, my + 40, "its tracking is only described, without any label, to set the "
+                  "ranges of the degradation", 11, MUTED))  # fmt: skip
+    p.append(line(537, my - 2, 537, py + ph + 50, RULE, 0.9, dash="3 3", arrow=True))
+    p.append(text(543, my - 12, "label-free description", 10.5, MUTED, "start", "italic"))
+    p.append(rect(700, my, 288, 54, "#ffffff", RULE, 0.8))
+    p.append(text(844, my + 22, "Prediction on the provided match", 12.5))
+    p.append(text(844, my + 40, "public 5 minutes: checks only", 11, MUTED))
+    p.append(line(622, my + 27, 696, my + 27, arrow=True))
+    p.append(line(906, 160, 906, my - 4, arrow=True))
+    save("training.svg", p)
+
+
+if __name__ == "__main__":
+    OUT.mkdir(parents=True, exist_ok=True)
+    architecture()
+    decoder()
+    training()
